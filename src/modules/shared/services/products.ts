@@ -1,25 +1,22 @@
 import { Product } from '../types/Product';
-import { ProductDetail } from '../types/ProductDetails';
 
-const BASE_URL = '/api';
+const BASE_URL = import.meta.env.BASE_URL;
 
 export const getProducts = async (): Promise<Product[]> => {
-  const response = await fetch(`${BASE_URL}/products.json`);
+  const response = await fetch(`${BASE_URL}api/products.json`);
 
   if (!response.ok) {
-    throw new Error('Failed to fetch products');
+    throw new Error('Failed to load products');
   }
 
   return response.json();
 };
 
-export const getProductDetails = async (
-  productId: string,
-): Promise<ProductDetail> => {
-  const response = await fetch(`${BASE_URL}/products/${productId}.json`);
+export const getProductDetails = async (productId: string) => {
+  const response = await fetch(`${BASE_URL}api/products/${productId}.json`);
 
   if (!response.ok) {
-    throw new Error('Failed to fetch product details');
+    throw new Error('Failed to load product details');
   }
 
   return response.json();

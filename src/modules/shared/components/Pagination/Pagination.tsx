@@ -31,7 +31,10 @@ export const Pagination: React.FC<Props> = ({
         onClick={() => onPageChange(currentPage - 1)}
         aria-label="Previous page"
       >
-        <img src="/img/icons/arrow-left.svg" alt="Left" />
+        <img
+          src={`${import.meta.env.BASE_URL}img/icons/arrow-left.svg`}
+          alt="Left"
+        />
       </button>
 
       <div className={styles.pages}>
@@ -56,7 +59,10 @@ export const Pagination: React.FC<Props> = ({
         onClick={() => onPageChange(currentPage + 1)}
         aria-label="Next page"
       >
-        <img src="/img/icons/arrow-right.svg" alt="Right" />
+        <img
+          src={`${import.meta.env.BASE_URL}img/icons/arrow-right.svg`}
+          alt="Right"
+        />
       </button>
     </div>
   );

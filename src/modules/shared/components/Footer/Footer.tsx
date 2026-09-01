@@ -11,7 +11,10 @@ export const Footer: React.FC = () => {
     <footer className={styles.footer}>
       <div className={styles.container}>
         <Link to="/" className={styles.logo}>
-          <img src="/img/icons/logo.svg" alt="Nice Gadgets Logo" />
+          <img
+            src={`${import.meta.env.BASE_URL}img/icons/logo.svg`}
+            alt="Nice Gadgets Logo"
+          />
         </Link>
 
         <nav className={styles.nav}>
@@ -50,7 +53,7 @@ export const Footer: React.FC = () => {
             aria-label="Back to top"
           >
             <img
-              src="/img/icons/arrow.svg"
+              src={`${import.meta.env.BASE_URL}img/icons/arrow.svg`}
               alt="Arrow up"
               className={styles.icon}
             />

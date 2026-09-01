@@ -18,7 +18,10 @@ export const Header: React.FC = () => {
     <header className={styles.header}>
       <div className={styles.left}>
         <NavLink to="/" className={styles.logo}>
-          <img src="img/icons/logo.svg" alt="Nice Gadgets Logo" />
+          <img
+            src={`${import.meta.env.BASE_URL}img/icons/logo.svg`}
+            alt="Nice Gadgets Logo"
+          />
         </NavLink>
 
         <nav className={styles.nav}>
@@ -40,7 +43,10 @@ export const Header: React.FC = () => {
       <div className={styles.right}>
         <NavLink to="/favorites" className={getIconClass}>
           <div className={styles.iconWrapper}>
-            <img src="img/icons/heart.svg" alt="Favorites" />
+            <img
+              src={`${import.meta.env.BASE_URL}img/icons/heart.svg`}
+              alt="Favorites"
+            />
             {favoritesCount > 0 && (
               <span className={styles.badge}>{favoritesCount}</span>
             )}
@@ -49,7 +55,10 @@ export const Header: React.FC = () => {
 
         <NavLink to="/cart" className={getIconClass}>
           <div className={styles.iconWrapper}>
-            <img src="img/icons/shopping-bag.svg" alt="Cart" />
+            <img
+              src={`${import.meta.env.BASE_URL}img/icons/shopping-bag.svg`}
+              alt="Cart"
+            />
             {totalCount > 0 && (
               <span className={styles.badge}>{totalCount}</span>
             )}

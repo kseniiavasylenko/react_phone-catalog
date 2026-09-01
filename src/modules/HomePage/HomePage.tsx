@@ -45,9 +45,8 @@ export const HomePage: React.FC = () => {
       <section className={styles.banner}>
         <div className={styles.bannerSlide}>
           <img
-            src="/img/banner-phones.png"
+            src={`${import.meta.env.BASE_URL}img/banner-phones.png`}
             alt="Banner"
-            className={styles.bannerImg}
           />
         </div>
       </section>
