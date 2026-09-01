@@ -74,12 +74,8 @@ export const ProductCard: React.FC<Props> = ({ product }) => {
           aria-label="Favorite"
         >
           <img
-            src={
-              favorite
-                ? `${import.meta.env.BASE_URL}img/icons/heart-filled.svg`
-                : `${import.meta.env.BASE_URL}img/icons/heart.svg`
-            }
-            alt="Favorite icon"
+            src={`${import.meta.env.BASE_URL}${product.image}`}
+            alt={product.name}
           />
         </button>
       </div>
