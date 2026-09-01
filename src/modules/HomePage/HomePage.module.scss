@@ -1,0 +1,112 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px 56px;
+
+  @media (min-width: 640px) {
+    padding: 32px 24px 64px;
+  }
+}
+
+.title {
+  margin-bottom: 32px;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 41px;
+  letter-spacing: -0.01em;
+  color: #313237;
+}
+
+.banner {
+  margin-bottom: 56px;
+}
+
+.bannerSlide {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.bannerImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.section {
+  margin-bottom: 56px;
+}
+
+.sectionTitle {
+  margin-bottom: 24px;
+  font-size: 22px;
+  font-weight: 800;
+  color: #313237;
+}
+
+.slider {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(272px, 1fr));
+  gap: 16px;
+}
+
+.categories {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 16px;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.categoryCard {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+}
+
+.categoryImg {
+  width: 100%;
+  height: 250px;
+  margin-bottom: 24px;
+  background-color: #f3f3f3;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border-radius: 8px;
+}
+
+.phonesBg {
+  background-image: url('/img/category-phones.png');
+}
+
+.tabletsBg {
+  background-image: url('/img/category-tablets.png');
+}
+
+.accessoriesBg {
+  background-image: url('/img/category-accessories.png');
+}
+
+.categoryTitle {
+  margin-bottom: 4px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #313237;
+}
+
+.categoryCount {
+  font-size: 14px;
+  font-weight: 600;
+  color: #89939a;
+}
+
+.status {
+  padding: 60px 0;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  color: #89939a;
+}
