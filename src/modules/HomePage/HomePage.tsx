@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Product } from '../shared/types/Product';
 import { getProducts } from '../shared/services/products';
-import { ProductCard } from '../shared/components/ProductCard';
+import { ProductCard } from '../shared/components/ProductCard/ProductCard';
 import styles from './HomePage.module.scss';
 
 export const HomePage: React.FC = () => {
@@ -17,86 +17,110 @@ export const HomePage: React.FC = () => {
   }, []);
 
   const hotPrices = products
-    .filter(product => product.fullPrice > product.price)
-    .sort((a, b) => b.fullPrice - b.price - (a.fullPrice - a.price));
+    .filter(product => product.fullPrice && product.fullPrice > product.price)
+    .sort(
+      (a, b) => (b.fullPrice || 0) - b.price - ((a.fullPrice || 0) - a.price),
+    );
 
-  const brandNew = [...products].sort((a, b) => b.year - a.year);
+  const brandNew = [...products].sort((a, b) => (b.year || 0) - (a.year || 0));
 
-  const phonesCount = products.filter(
-    item => item.category === 'phones',
+  const getProductCategory = (item: Product) =>
+    item.category || (item as unknown as { type: string }).type || '';
+
+  const phonesCount = products.filter(item =>
+    getProductCategory(item).startsWith('phone'),
   ).length;
 
-  const tabletsCount = products.filter(
-    item => item.category === 'tablets',
+  const tabletsCount = products.filter(item =>
+    getProductCategory(item).startsWith('tablet'),
   ).length;
 
-  const accessoriesCount = products.filter(
-    item => item.category === 'accessories',
+  const accessoriesCount = products.filter(item =>
+    getProductCategory(item).startsWith('accessor'),
   ).length;
 
   if (loading) {
     return <div className={styles.status}>Loading...</div>;
   }
 
+  const baseUrl = import.meta.env.BASE_URL;
+
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Product Catalog</h1>
+    <main className={styles.container}>
+      <h1 className={styles.title}>Welcome to Nice Gadgets store!</h1>
 
       <section className={styles.banner}>
         <div className={styles.bannerSlide}>
           <img
-            src={`${import.meta.env.BASE_URL}img/banner-phones.png`}
-            alt="Banner"
+            src={`${baseUrl}img/banner-phones.png`}
+            alt="Main Banner"
+            className={styles.bannerImage}
           />
         </div>
       </section>
 
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Hot prices</h2>
-        <div className={styles.slider}>
-          {hotPrices.slice(0, 4).map(product => (
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>Hot prices</h2>
+        </div>
+        <div className={styles.goodsList}>
+          {hotPrices.map(product => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </section>
 
+      {/* Categories */}
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Shop by category</h2>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>Shop by category</h2>
+        </div>
         <div className={styles.categories}>
           <Link to="/phones" className={styles.categoryCard}>
-            <div className={`${styles.categoryImg} ${styles.phonesBg}`} />
+            <div className={styles.categoryImgWrapper}>
+              <img
+                src={`${baseUrl}img/category-phones.png`}
+                alt="Mobile phones"
+              />
+            </div>
             <h3 className={styles.categoryTitle}>Mobile phones</h3>
-            <span className={styles.categoryCount}>
-              {`${phonesCount} models`}
-            </span>
+            <p className={styles.categoryCount}>{`${phonesCount} models`}</p>
           </Link>
 
           <Link to="/tablets" className={styles.categoryCard}>
-            <div className={`${styles.categoryImg} ${styles.tabletsBg}`} />
+            <div className={styles.categoryImgWrapper}>
+              <img src={`${baseUrl}img/category-tablets.png`} alt="Tablets" />
+            </div>
             <h3 className={styles.categoryTitle}>Tablets</h3>
-            <span className={styles.categoryCount}>
-              {`${tabletsCount} models`}
-            </span>
+            <p className={styles.categoryCount}>{`${tabletsCount} models`}</p>
           </Link>
 
           <Link to="/accessories" className={styles.categoryCard}>
-            <div className={`${styles.categoryImg} ${styles.accessoriesBg}`} />
+            <div className={styles.categoryImgWrapper}>
+              <img
+                src={`${baseUrl}img/category-accessories.png`}
+                alt="Accessories"
+              />
+            </div>
             <h3 className={styles.categoryTitle}>Accessories</h3>
-            <span className={styles.categoryCount}>
-              {`${accessoriesCount} models`}
-            </span>
+            <p
+              className={styles.categoryCount}
+            >{`${accessoriesCount} models`}</p>
           </Link>
         </div>
       </section>
 
+      {/* Brand New Slider */}
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Brand new models</h2>
-        <div className={styles.slider}>
-          {brandNew.slice(0, 4).map(product => (
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>Brand new models</h2>
+        </div>
+        <div className={styles.goodsList}>
+          {brandNew.map(product => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </section>
-    </div>
+    </main>
   );
 };

@@ -13,7 +13,13 @@ export const ProductCard: React.FC<Props> = ({ product }) => {
   const { cart, addToCart, removeFromCart } = useCart();
   const { isFavorite, toggleFavorite } = useFavorites();
 
-  const { id, name, price, fullPrice, screen, capacity, ram, image } = product;
+  const { id, name, price, fullPrice, screen, capacity, ram, image, imageUrl } =
+    product;
+
+  // Формуємо безпечний шлях до картинки товару
+  const rawImagePath = image || imageUrl || '';
+  const cleanImagePath = rawImagePath.replace(/^\//, '');
+  const productImgSrc = `${import.meta.env.BASE_URL}${cleanImagePath}`;
 
   const isInCart = cart.some(item => item.id === id);
   const favorite = isFavorite(id);
@@ -29,7 +35,7 @@ export const ProductCard: React.FC<Props> = ({ product }) => {
   return (
     <div className={styles.card}>
       <Link to={`/products/${id}`} className={styles.imageWrapper}>
-        <img src={image} alt={name} className={styles.image} />
+        <img src={productImgSrc} alt={name} className={styles.image} />
       </Link>
 
       <Link to={`/products/${id}`} className={styles.title}>
@@ -46,15 +52,15 @@ export const ProductCard: React.FC<Props> = ({ product }) => {
       <div className={styles.specs}>
         <div className={styles.specRow}>
           <span className={styles.specLabel}>Screen</span>
-          <span className={styles.specValue}>{screen}</span>
+          <span className={styles.specValue}>{screen || '-'}</span>
         </div>
         <div className={styles.specRow}>
           <span className={styles.specLabel}>Capacity</span>
-          <span className={styles.specValue}>{capacity}</span>
+          <span className={styles.specValue}>{capacity || '-'}</span>
         </div>
         <div className={styles.specRow}>
           <span className={styles.specLabel}>RAM</span>
-          <span className={styles.specValue}>{ram}</span>
+          <span className={styles.specValue}>{ram || '-'}</span>
         </div>
       </div>
 
@@ -74,8 +80,12 @@ export const ProductCard: React.FC<Props> = ({ product }) => {
           aria-label="Favorite"
         >
           <img
-            src={`${import.meta.env.BASE_URL}${product.image}`}
-            alt={product.name}
+            src={
+              favorite
+                ? `${import.meta.env.BASE_URL}img/icons/heart-filled.svg`
+                : `${import.meta.env.BASE_URL}img/icons/heart.svg`
+            }
+            alt="Favorite icon"
           />
         </button>
       </div>
