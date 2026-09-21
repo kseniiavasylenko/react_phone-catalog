@@ -21,12 +21,13 @@ export const getProducts = async (): Promise<Product[]> => {
       cleanPath = `img/${cleanPath}`;
     }
 
+    // Безопасное извлечение цен
     const price = product.price ?? product.priceDiscount ?? 0;
     const fullPrice = product.fullPrice ?? product.priceRegular ?? price;
 
     return {
       ...product,
-      image: cleanPath,
+      image: cleanPath ? `${cleanPath}` : '',
       price,
       fullPrice,
     };

@@ -112,8 +112,8 @@ export const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
           <img
             src={getAssetUrl(
               favorite
-                ? '/img/icons/favourites-filled.svg'
-                : '/img/icons/favourites.svg',
+                ? 'img/icons/favourites-filled.svg'
+                : 'img/icons/favourites.svg',
             )}
             alt="Favorite"
           />

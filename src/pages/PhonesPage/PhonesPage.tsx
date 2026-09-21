@@ -6,13 +6,17 @@ import { Pagination } from '../../components/Pagination';
 import styles from './PhonesPage.module.scss';
 
 export const PhonesPage: React.FC = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setPhones] = useState<Product[]>([]);
   const [sortBy, setSortBy] = useState<string>('age');
   const [perPage, setPerPage] = useState<string>('16');
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   useEffect(() => {
-    getProducts().then(setProducts);
+    getProducts().then((data: Product[]) => {
+      const phoneProducts = data.filter(item => item.category === 'phones');
+
+      setPhones(phoneProducts);
+    });
   }, []);
 
   // 1. Сортировка товаров
