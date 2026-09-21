@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { Product } from '../../types/Product';
 import styles from './CartItem.module.scss';
 
-
 export interface CartItemType {
   product: Product;
   quantity: number;
