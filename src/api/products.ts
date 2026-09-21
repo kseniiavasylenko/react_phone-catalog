@@ -2,7 +2,6 @@ import { Product } from '../types/Product';
 
 export const getProducts = async (): Promise<Product[]> => {
   const baseUrl = import.meta.env.BASE_URL;
-  // Запрашиваем общий файл products.json вместо только phones.json
   const response = await fetch(`${baseUrl}api/products.json`);
 
   if (!response.ok) {
@@ -22,13 +21,12 @@ export const getProducts = async (): Promise<Product[]> => {
       cleanPath = `img/${cleanPath}`;
     }
 
-    // Безопасное извлечение цен
     const price = product.price ?? product.priceDiscount ?? 0;
     const fullPrice = product.fullPrice ?? product.priceRegular ?? price;
 
     return {
       ...product,
-      image: cleanPath ? `${baseUrl}${cleanPath}` : '',
+      image: cleanPath,
       price,
       fullPrice,
     };
