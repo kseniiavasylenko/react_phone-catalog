@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Product } from '../types/Product';
+import { Product } from '../components/ProductCard';
 
 interface FavoritesContextType {
   favorites: Product[];
@@ -12,29 +12,13 @@ const FavoritesContext = createContext<FavoritesContextType | undefined>(
   undefined,
 );
 
-// Вспомогательная функция сопоставления ID
-const isSameProduct = (product: Product, targetId: string) => {
-  return (
-    product.id === targetId ||
-    product.itemId === targetId ||
-    product.phoneId === targetId
-  );
-};
-
 export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [favorites, setFavorites] = useState<Product[]>(() => {
-    try {
-      const saved = localStorage.getItem('favorites');
+    const saved = localStorage.getItem('favorites');
 
-      return saved ? JSON.parse(saved) : [];
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Failed to parse favorites from localStorage:', error);
-
-      return [];
-    }
+    return saved ? JSON.parse(saved) : [];
   });
 
   useEffect(() => {
@@ -42,27 +26,15 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [favorites]);
 
   const addToFavorites = (product: Product) => {
-    setFavorites(prev => {
-      const exists = prev.some(
-        item =>
-          isSameProduct(item, product.id) ||
-          (product.itemId && isSameProduct(item, product.itemId)),
-      );
-
-      if (exists) {
-        return prev;
-      }
-
-      return [...prev, product];
-    });
+    setFavorites(prev => [...prev, product]);
   };
 
   const removeFromFavorites = (productId: string) => {
-    setFavorites(prev => prev.filter(item => !isSameProduct(item, productId)));
+    setFavorites(prev => prev.filter(item => item.id !== productId));
   };
 
   const isFavorite = (productId: string) => {
-    return favorites.some(item => isSameProduct(item, productId));
+    return favorites.some(item => item.id === productId);
   };
 
   return (

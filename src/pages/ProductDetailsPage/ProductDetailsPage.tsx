@@ -15,6 +15,7 @@ interface ProductDetails extends Product {
   cell?: string[];
 }
 
+// Карта цветов для стилизации CSS bg-color
 const COLOR_MAP: Record<string, string> = {
   black: '#1f2022',
   green: '#aee1cd',
@@ -44,6 +45,7 @@ const getAssetUrl = (path?: string) => {
   return `${import.meta.env.BASE_URL}${cleanPath}`;
 };
 
+// Функция очищает название товара от указания конкретной памяти и цвета для заголовка h1
 const getCleanTitle = (name: string, capacity?: string, color?: string) => {
   let cleanName = name;
 
@@ -80,17 +82,9 @@ export const ProductDetailsPage: React.FC = () => {
   useEffect(() => {
     setIsLoading(true);
 
-    const apiCategory = category?.endsWith('s') ? category : `${category}s`;
-
     // 1. Загрузка данных текущего товара
-    const fetchCurrentProduct = fetch(getAssetUrl(`api/${apiCategory}.json`))
-      .then(res => {
-        if (!res.ok) {
-          throw new Error('Failed to fetch category data');
-        }
-
-        return res.json();
-      })
+    const fetchCurrentProduct = fetch(getAssetUrl(`api/${category}.json`))
+      .then(res => res.json())
       .then((data: ProductDetails[]) => {
         const found = data.find(
           item => item.id === productId || item.itemId === productId,
@@ -101,30 +95,30 @@ export const ProductDetailsPage: React.FC = () => {
           const firstImg = found.images?.[0] || found.image || '';
 
           setSelectedImage(firstImg);
-        } else {
-          setProduct(null);
         }
       });
 
-    // 2. Загрузка товаров для карусели «You may also like»
+    // 2. Загрузка товаров для карусели «You may also like» со всех категорий
     const fetchSuggested = Promise.all([
       fetch(getAssetUrl('api/phones.json'))
-        .then(r => (r.ok ? r.json() : []))
+        .then(r => r.json())
         .catch(() => []),
       fetch(getAssetUrl('api/tablets.json'))
-        .then(r => (r.ok ? r.json() : []))
+        .then(r => r.json())
         .catch(() => []),
       fetch(getAssetUrl('api/accessories.json'))
-        .then(r => (r.ok ? r.json() : []))
+        .then(r => r.json())
         .catch(() => []),
     ]).then(([phones, tablets, accessories]) => {
       const allProducts: Product[] = [...phones, ...tablets, ...accessories];
       const filtered = allProducts.filter(
         item => item.id !== productId && item.itemId !== productId,
       );
+      const randomSuggested = [...filtered]
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 8);
 
-      // Фиксированный детерминированный выбор 8 рекомендаций вместо динамического Math.random()
-      setSuggestedProducts(filtered.slice(0, 8));
+      setSuggestedProducts(randomSuggested);
     });
 
     Promise.all([fetchCurrentProduct, fetchSuggested])
@@ -153,40 +147,30 @@ export const ProductDetailsPage: React.FC = () => {
   const availableColors =
     product.colorsAvailable || (product.color ? [product.color] : []);
 
-  // Точный замен параметров в ID с учетом дефисов
+  // Переключение памяти с изменением URL
   const handleCapacityChange = (newCapacity: string) => {
-    if (!product.capacity || newCapacity === product.capacity) {
+    if (newCapacity === product.capacity) {
       return;
     }
 
     const currentCapLower = product.capacity.toLowerCase();
     const newCapLower = newCapacity.toLowerCase();
-
-    // Безопасный замен с точным совпадением фрагмента
-    const parts = (productId || '').split('-');
-    const newParts = parts.map(part =>
-      part === currentCapLower ? newCapLower : part,
-    );
-    const newProductId = newParts.join('-');
+    const newProductId = productId?.replace(currentCapLower, newCapLower);
 
     if (newProductId && newProductId !== productId) {
       navigate(`/${category}/${newProductId}`);
     }
   };
 
+  // Переключение цвета с изменением URL
   const handleColorChange = (newColor: string) => {
-    if (!product.color || newColor === product.color) {
+    if (newColor === product.color) {
       return;
     }
 
-    const currentColorLower = product.color.toLowerCase().replace(/\s+/g, '-');
-    const newColorLower = newColor.toLowerCase().replace(/\s+/g, '-');
-
-    const parts = (productId || '').split('-');
-    const newParts = parts.map(part =>
-      part === currentColorLower ? newColorLower : part,
-    );
-    const newProductId = newParts.join('-');
+    const currentColorLower = product.color.toLowerCase();
+    const newColorLower = newColor.toLowerCase();
+    const newProductId = productId?.replace(currentColorLower, newColorLower);
 
     if (newProductId && newProductId !== productId) {
       navigate(`/${category}/${newProductId}`);
@@ -214,6 +198,7 @@ export const ProductDetailsPage: React.FC = () => {
         ‹ Back
       </button>
 
+      {/* Очищенный заголовок */}
       <h1 className={styles.title}>
         {getCleanTitle(product.name, product.capacity, product.color)}
       </h1>
@@ -226,9 +211,7 @@ export const ProductDetailsPage: React.FC = () => {
               <button
                 key={img}
                 type="button"
-                className={`${styles.thumbBtn} ${
-                  selectedImage === img ? styles.activeThumb : ''
-                }`}
+                className={`${styles.thumbBtn} ${selectedImage === img ? styles.activeThumb : ''}`}
                 onClick={() => setSelectedImage(img)}
               >
                 <img src={getAssetUrl(img)} alt="Thumbnail" />
@@ -243,6 +226,7 @@ export const ProductDetailsPage: React.FC = () => {
 
         {/* ПАНЕЛЬ ВЫБОРА ЦВЕТА, ОБЪЕМА И ПОКУПКИ */}
         <div className={styles.productControls}>
+          {/* ВЫБОР ЦВЕТА */}
           <div className={styles.sectionLabel}>Available colors</div>
           <div className={styles.colorPicker}>
             {availableColors.map(colorName => {
@@ -254,9 +238,7 @@ export const ProductDetailsPage: React.FC = () => {
                 <button
                   key={colorName}
                   type="button"
-                  className={`${styles.colorCircle} ${
-                    isActive ? styles.activeColor : ''
-                  }`}
+                  className={`${styles.colorCircle} ${isActive ? styles.activeColor : ''}`}
                   style={{ backgroundColor: hexColor }}
                   onClick={() => handleColorChange(colorName)}
                   title={colorName}
@@ -267,6 +249,7 @@ export const ProductDetailsPage: React.FC = () => {
 
           <div className={styles.divider} />
 
+          {/* ВЫБОР ОБЪЕМА */}
           <div className={styles.sectionLabel}>Select capacity</div>
           <div className={styles.capacityPicker}>
             {availableCapacities.map(cap => (
@@ -285,6 +268,7 @@ export const ProductDetailsPage: React.FC = () => {
 
           <div className={styles.divider} />
 
+          {/* ЦЕНА */}
           <div className={styles.priceRow}>
             <span className={styles.price}>${currentPrice}</span>
             {regularPrice > currentPrice && (
@@ -292,6 +276,7 @@ export const ProductDetailsPage: React.FC = () => {
             )}
           </div>
 
+          {/* КНОПКИ ДЕЙСТВИЯ */}
           <div className={styles.actionBtns}>
             <button
               type="button"
@@ -323,6 +308,7 @@ export const ProductDetailsPage: React.FC = () => {
             </button>
           </div>
 
+          {/* КРАТКИЕ ХАРАКТЕРИСТИКИ */}
           <div className={styles.smallSpecs}>
             <div className={styles.specRow}>
               <span className={styles.specLabel}>Screen</span>
@@ -348,6 +334,7 @@ export const ProductDetailsPage: React.FC = () => {
         </div>
       </div>
 
+      {/* ОПИСАНИЕ И ХАРАКТЕРИСТИКИ */}
       <div className={styles.bottomSection}>
         <div className={styles.aboutText}>
           <h2 className={styles.sectionTitle}>About</h2>
@@ -394,6 +381,7 @@ export const ProductDetailsPage: React.FC = () => {
         </div>
       </div>
 
+      {/* КАРУСЕЛЬ YOU MAY ALSO LIKE */}
       <div className={styles.suggestedSection}>
         <h2 className={styles.sectionTitle}>You may also like</h2>
         <div className={styles.suggestedCarousel}>

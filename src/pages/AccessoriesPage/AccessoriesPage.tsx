@@ -10,9 +10,7 @@ export const AccessoriesPage: React.FC = () => {
   useEffect(() => {
     setIsLoading(true);
 
-    const baseUrl = import.meta.env.BASE_URL;
-
-    fetch(`${baseUrl}api/products.json`)
+    fetch('/api/products.json')
       .then(res => res.json())
       .then((data: Product[]) => {
         const accessoryProducts = data.filter(
@@ -31,7 +29,7 @@ export const AccessoriesPage: React.FC = () => {
       <div className={styles.breadcrumbs}>
         <Link to="/">
           <img
-            src={`${import.meta.env.BASE_URL}img/icons/home.svg`}
+            src="{`{import.meta.env.BASE_URL}img/icons/home.svg`}"
             alt="Home"
           />
         </Link>

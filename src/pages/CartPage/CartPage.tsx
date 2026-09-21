@@ -3,26 +3,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import styles from './CartPage.module.scss';
 
-const getAssetUrl = (path?: string) => {
-  if (!path) {
-    return '';
-  }
-
-  if (path.startsWith('http')) {
-    return path;
-  }
-
-  const baseUrl = import.meta.env.BASE_URL;
-
-  if (path.startsWith(baseUrl)) {
-    return path;
-  }
-
-  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-
-  return `${baseUrl}${cleanPath}`;
-};
-
 export const CartPage: React.FC = () => {
   const {
     cart,
@@ -55,74 +35,61 @@ export const CartPage: React.FC = () => {
       {cart.length > 0 ? (
         <div className={styles.content}>
           <div className={styles.itemsList}>
-            {cart.map(({ product, quantity }) => {
-              const itemPrice =
-                product.priceDiscount ??
-                product.price ??
-                product.priceRegular ??
-                0;
-              const imageUrl = product.image || product.images?.[0] || '';
-              const productId =
-                product.itemId ||
-                (product as Record<string, unknown>).phoneId ||
-                product.id;
+            {cart.map(({ product, quantity }) => (
+              <div key={product.id} className={styles.cartItem}>
+                <div className={styles.itemMain}>
+                  <button
+                    type="button"
+                    className={styles.removeBtn}
+                    onClick={() => removeFromCart(product.id)}
+                    aria-label="Remove item"
+                  >
+                    <img
+                      src="{`{import.meta.env.BASE_URL}img/icons/close.svg`}"
+                      alt="Close"
+                    />
+                  </button>
 
-              return (
-                <div key={product.id} className={styles.cartItem}>
-                  <div className={styles.itemMain}>
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className={styles.itemImage}
+                  />
+
+                  <Link
+                    to={`/${product.category}/${product.itemId || product.phoneId || product.id}`}
+                    className={styles.itemTitle}
+                  >
+                    {product.name}
+                  </Link>
+                </div>
+
+                <div className={styles.itemControls}>
+                  <div className={styles.quantityGroup}>
                     <button
                       type="button"
-                      className={styles.removeBtn}
-                      onClick={() => removeFromCart(product.id)}
-                      aria-label="Remove item"
+                      className={styles.quantityBtn}
+                      onClick={() => updateQuantity(product.id, quantity - 1)}
+                      disabled={quantity <= 1}
                     >
-                      <img
-                        src={`${import.meta.env.BASE_URL}img/icons/close.svg`}
-                        alt="Close"
-                      />
+                      -
                     </button>
-
-                    <img
-                      src={getAssetUrl(imageUrl)}
-                      alt={product.name}
-                      className={styles.itemImage}
-                    />
-
-                    <Link
-                      to={`/${product.category}/${productId}`}
-                      className={styles.itemTitle}
+                    <span className={styles.quantityCount}>{quantity}</span>
+                    <button
+                      type="button"
+                      className={styles.quantityBtn}
+                      onClick={() => updateQuantity(product.id, quantity + 1)}
                     >
-                      {product.name}
-                    </Link>
+                      +
+                    </button>
                   </div>
 
-                  <div className={styles.itemControls}>
-                    <div className={styles.quantityGroup}>
-                      <button
-                        type="button"
-                        className={styles.quantityBtn}
-                        onClick={() => updateQuantity(product.id, quantity - 1)}
-                        disabled={quantity <= 1}
-                      >
-                        -
-                      </button>
-                      <span className={styles.quantityCount}>{quantity}</span>
-                      <button
-                        type="button"
-                        className={styles.quantityBtn}
-                        onClick={() => updateQuantity(product.id, quantity + 1)}
-                      >
-                        +
-                      </button>
-                    </div>
-
-                    <span className={styles.itemPrice}>
-                      ${itemPrice * quantity}
-                    </span>
-                  </div>
+                  <span className={styles.itemPrice}>
+                    ${product.price * quantity}
+                  </span>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
 
           <div className={styles.totalBlock}>

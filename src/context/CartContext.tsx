@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Product } from '../types/Product';
+import { Product } from '../components/ProductCard';
 
 export interface CartItem {
   product: Product;
@@ -18,15 +18,6 @@ interface CartContextType {
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
-
-// Вспомогательная функция для проверки равенства ID товара с учетом разных полей
-const isSameProduct = (product: Product, targetId: string) => {
-  return (
-    product.id === targetId ||
-    product.itemId === targetId ||
-    product.phoneId === targetId
-  );
-};
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -51,15 +42,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   const addToCart = (product: Product) => {
     setCart(prevCart => {
       const existingItem = prevCart.find(
-        item =>
-          isSameProduct(item.product, product.id) ||
-          (product.itemId && isSameProduct(item.product, product.itemId)),
+        item => item.product.id === product.id,
       );
 
       if (existingItem) {
         return prevCart.map(item =>
-          isSameProduct(item.product, product.id) ||
-          (product.itemId && isSameProduct(item.product, product.itemId))
+          item.product.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
             : item,
         );
@@ -70,9 +58,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const removeFromCart = (productId: string) => {
-    setCart(prevCart =>
-      prevCart.filter(item => !isSameProduct(item.product, productId)),
-    );
+    setCart(prevCart => prevCart.filter(item => item.product.id !== productId));
   };
 
   const updateQuantity = (productId: string, quantity: number) => {
@@ -84,7 +70,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
 
     setCart(prevCart =>
       prevCart.map(item =>
-        isSameProduct(item.product, productId) ? { ...item, quantity } : item,
+        item.product.id === productId ? { ...item, quantity } : item,
       ),
     );
   };
@@ -94,10 +80,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const isInCart = (productId: string) => {
-    return cart.some(item => isSameProduct(item.product, productId));
+    return cart.some(item => item.product.id === productId);
   };
 
   const totalPrice = cart.reduce((sum, item) => {
+    // Безопасное определение актуальной цены товара
     const itemPrice =
       item.product.priceDiscount ??
       item.product.price ??

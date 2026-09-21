@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { getProducts } from '../../api/products';
 import { Product } from '../../types/Product';
 import { ProductCard } from '../../components/ProductCard';
@@ -8,27 +7,17 @@ import styles from './PhonesPage.module.scss';
 
 export const PhonesPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  // Чтение параметров из URL с дефолтными значениями
-  const sortBy = searchParams.get('sort') || 'age';
-  const perPage = searchParams.get('perPage') || '16';
-  const currentPage = Number(searchParams.get('page')) || 1;
+  const [sortBy, setSortBy] = useState<string>('age');
+  const [perPage, setPerPage] = useState<string>('16');
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   useEffect(() => {
     getProducts().then(setProducts);
   }, []);
 
-  // 1. Фильтрация только товаров категории 'phones'
-  const phones = useMemo(() => {
-    return products.filter(
-      product => product.category === 'phones' || !product.category,
-    );
-  }, [products]);
-
-  // 2. Сортировка отфильтрованных телефонов
+  // 1. Сортировка товаров
   const sortedProducts = useMemo(() => {
-    return [...phones].sort((a, b) => {
+    return [...products].sort((a, b) => {
       switch (sortBy) {
         case 'age':
           return (b.year || 0) - (a.year || 0);
@@ -40,12 +29,13 @@ export const PhonesPage: React.FC = () => {
           return 0;
       }
     });
-  }, [phones, sortBy]);
+  }, [products, sortBy]);
 
+  // 2. Расчет среза для пагинации
+  const itemsPerPage =
+    perPage === 'all' ? sortedProducts.length : Number(perPage);
   const total = sortedProducts.length;
-  const itemsPerPage = perPage === 'all' ? total : Number(perPage) || 16;
 
-  // 3. Расчет срезка для пагинации
   const visibleProducts = useMemo(() => {
     if (perPage === 'all') {
       return sortedProducts;
@@ -56,28 +46,14 @@ export const PhonesPage: React.FC = () => {
     return sortedProducts.slice(start, start + itemsPerPage);
   }, [sortedProducts, currentPage, itemsPerPage, perPage]);
 
-  // Хэндлеры для изменения searchParams в URL
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const params = new URLSearchParams(searchParams);
-
-    params.set('sort', e.target.value);
-    params.set('page', '1');
-    setSearchParams(params);
+    setSortBy(e.target.value);
+    setCurrentPage(1);
   };
 
   const handlePerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const params = new URLSearchParams(searchParams);
-
-    params.set('perPage', e.target.value);
-    params.set('page', '1');
-    setSearchParams(params);
-  };
-
-  const handlePageChange = (page: number) => {
-    const params = new URLSearchParams(searchParams);
-
-    params.set('page', page.toString());
-    setSearchParams(params);
+    setPerPage(e.target.value);
+    setCurrentPage(1);
   };
 
   return (
@@ -124,12 +100,12 @@ export const PhonesPage: React.FC = () => {
         ))}
       </div>
 
-      {perPage !== 'all' && total > itemsPerPage && (
+      {perPage !== 'all' && (
         <Pagination
           total={total}
           perPage={itemsPerPage}
           currentPage={currentPage}
-          onPageChange={handlePageChange}
+          onPageChange={setCurrentPage}
         />
       )}
     </div>

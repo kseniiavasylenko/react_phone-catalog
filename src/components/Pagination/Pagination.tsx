@@ -14,8 +14,7 @@ export const Pagination: React.FC<Props> = ({
   currentPage,
   onPageChange,
 }) => {
-  const validPerPage = perPage > 0 ? perPage : 1;
-  const pageCount = Math.ceil(total / validPerPage);
+  const pageCount = Math.ceil(total / perPage);
 
   if (pageCount <= 1) {
     return null;
@@ -24,10 +23,9 @@ export const Pagination: React.FC<Props> = ({
   const pages = Array.from({ length: pageCount }, (_, i) => i + 1);
 
   return (
-    <div className={styles.pagination} data-cy="pagination">
+    <div className={styles.pagination}>
       <button
         type="button"
-        data-cy="paginationLeft"
         className={styles.arrow}
         disabled={currentPage === 1}
         onClick={() => onPageChange(currentPage - 1)}
@@ -43,25 +41,19 @@ export const Pagination: React.FC<Props> = ({
         </svg>
       </button>
 
-      <ul className={styles.list}>
-        {pages.map(page => (
-          <li key={page}>
-            <button
-              type="button"
-              className={`${styles.item} ${
-                page === currentPage ? styles.active : ''
-              }`}
-              onClick={() => onPageChange(page)}
-            >
-              {page}
-            </button>
-          </li>
-        ))}
-      </ul>
+      {pages.map(page => (
+        <button
+          key={page}
+          type="button"
+          className={`${styles.item} ${page === currentPage ? styles.active : ''}`}
+          onClick={() => onPageChange(page)}
+        >
+          {page}
+        </button>
+      ))}
 
       <button
         type="button"
-        data-cy="paginationRight"
         className={styles.arrow}
         disabled={currentPage === pageCount}
         onClick={() => onPageChange(currentPage + 1)}

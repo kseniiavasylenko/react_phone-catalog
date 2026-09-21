@@ -5,19 +5,7 @@ import { Product } from '../../types/Product';
 import { ProductCard } from '../../components/ProductCard';
 import styles from './HomePage.module.scss';
 
-const getAssetUrl = (path: string) => {
-  const baseUrl = import.meta.env.BASE_URL;
-
-  if (path.startsWith(baseUrl)) {
-    return path;
-  }
-
-  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-
-  return `${baseUrl}${cleanPath}`;
-};
-
-const rawBannerImages = [
+const bannerImages = [
   'img/banner-phones.png',
   'img/banner-tablets.png',
   'img/banner-accessories.png',
@@ -32,8 +20,6 @@ export const HomePage: React.FC = () => {
   const brandNewRef = useRef<HTMLDivElement>(null);
   const hotPricesRef = useRef<HTMLDivElement>(null);
 
-  const bannerImages = useMemo(() => rawBannerImages.map(getAssetUrl), []);
-
   useEffect(() => {
     getProducts().then(setProducts);
   }, []);
@@ -44,7 +30,7 @@ export const HomePage: React.FC = () => {
     }, 5000);
 
     return () => clearInterval(timer);
-  }, [bannerImages.length]);
+  }, []);
 
   const handlePrevSlide = () => {
     setCurrentSlide(
@@ -101,15 +87,8 @@ export const HomePage: React.FC = () => {
   }, [products]);
 
   const hotPrices = useMemo(() => {
-    const getDiscount = (p: Product) => {
-      const full = p.fullPrice ?? p.priceRegular ?? 0;
-      const current = p.priceDiscount ?? p.price ?? full;
-
-      return full - current;
-    };
-
     return [...products]
-      .sort((a, b) => getDiscount(b) - getDiscount(a))
+      .sort((a, b) => b.fullPrice - b.price - (a.fullPrice - a.price))
       .slice(0, 8);
   }, [products]);
 
@@ -191,9 +170,7 @@ export const HomePage: React.FC = () => {
             <button
               key={index}
               type="button"
-              className={`${styles.dot} ${
-                index === currentSlide ? styles.dotActive : ''
-              }`}
+              className={`${styles.dot} ${index === currentSlide ? styles.dotActive : ''}`}
               onClick={() => setCurrentSlide(index)}
               aria-label={`Go to slide ${index + 1}`}
             />
@@ -209,10 +186,7 @@ export const HomePage: React.FC = () => {
         <div className={styles.categoriesGrid}>
           <Link to="/phones" className={styles.categoryCard}>
             <div className={styles.categoryImageWrapper}>
-              <img
-                src={getAssetUrl('img/category-phones.png')}
-                alt="Mobile phones"
-              />
+              <img src="img/category-phones.png" alt="Mobile phones" />
             </div>
             <h3 className={styles.categoryName}>Mobile phones</h3>
             <span className={styles.categoryCount}>{phonesCount} models</span>
@@ -220,10 +194,7 @@ export const HomePage: React.FC = () => {
 
           <Link to="/tablets" className={styles.categoryCard}>
             <div className={styles.categoryImageWrapper}>
-              <img
-                src={getAssetUrl('img/category-tablets.png')}
-                alt="Tablets"
-              />
+              <img src="img/category-tablets.png" alt="Tablets" />
             </div>
             <h3 className={styles.categoryName}>Tablets</h3>
             <span className={styles.categoryCount}>{tabletsCount} models</span>
@@ -231,10 +202,7 @@ export const HomePage: React.FC = () => {
 
           <Link to="/accessories" className={styles.categoryCard}>
             <div className={styles.categoryImageWrapper}>
-              <img
-                src={getAssetUrl('img/category-accessories.png')}
-                alt="Accessories"
-              />
+              <img src="img/category-accessories.png" alt="Accessories" />
             </div>
             <h3 className={styles.categoryName}>Accessories</h3>
             <span className={styles.categoryCount}>
