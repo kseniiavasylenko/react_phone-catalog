@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ProductCard } from '../../components/ProductCard';
 import { useFavorites } from '../../context/FavoritesContext';
-import { getAssetUrl } from '../../utils/getAssetUrl';
 import styles from './FavoritesPage.module.scss';
 
 export const FavoritesPage: React.FC = () => {
@@ -12,7 +11,7 @@ export const FavoritesPage: React.FC = () => {
     <div className={styles.page}>
       <div className={styles.breadcrumbs}>
         <Link to="/">
-          <img src={getAssetUrl('/img/icons/home.svg')} alt="Home" />
+          <img src="/img/icons/home.svg" alt="Home" />
         </Link>
         <span>›</span>
         <span>Favorites</span>
