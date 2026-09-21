@@ -16,9 +16,16 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [favorites, setFavorites] = useState<Product[]>(() => {
-    const saved = localStorage.getItem('favorites');
+    try {
+      const saved = localStorage.getItem('favorites');
 
-    return saved ? JSON.parse(saved) : [];
+      return saved ? JSON.parse(saved) : [];
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to parse favorites from localStorage:', error);
+
+      return [];
+    }
   });
 
   useEffect(() => {
@@ -26,7 +33,13 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [favorites]);
 
   const addToFavorites = (product: Product) => {
-    setFavorites(prev => [...prev, product]);
+    setFavorites(prev => {
+      if (prev.some(item => item.id === product.id)) {
+        return prev;
+      }
+
+      return [...prev, product];
+    });
   };
 
   const removeFromFavorites = (productId: string) => {

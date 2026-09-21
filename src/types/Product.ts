@@ -1,8 +1,8 @@
 export interface Product {
   id: string;
   category: string;
-  phoneId: string;
-  itemId: string;
+  itemId?: string;
+  phoneId?: string;
   name: string;
   fullPrice: number;
   price: number;
@@ -12,4 +12,8 @@ export interface Product {
   ram: string;
   year: number;
   image: string;
+
+  priceDiscount?: number;
+  priceRegular?: number;
+  images?: string[];
 }

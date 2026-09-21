@@ -1,7 +1,8 @@
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import styles from './Footer.module.scss';
 
-export const Footer = () => {
+export const Footer: React.FC = () => {
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -15,7 +16,7 @@ export const Footer = () => {
         {/* 1. Логотип */}
         <NavLink to="/" className={styles.logoLink}>
           <img
-            src="{`{import.meta.env.BASE_URL}img/logo.svg`}"
+            src={`${import.meta.env.BASE_URL}img/logo.svg`}
             alt="Product Catalog Logo"
             className={styles.logo}
           />
@@ -32,7 +33,7 @@ export const Footer = () => {
             Github
           </a>
           <a
-            href="#"
+            href="#contacts"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.link}
@@ -40,7 +41,7 @@ export const Footer = () => {
             Contacts
           </a>
           <a
-            href="#"
+            href="#rights"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.link}
@@ -59,7 +60,7 @@ export const Footer = () => {
             aria-label="Back to top"
           >
             <img
-              src="{`{import.meta.env.BASE_URL}img/icons/arrow-up.svg`}"
+              src={`${import.meta.env.BASE_URL}img/icons/arrow-up.svg`}
               alt="Arrow up"
               className={styles.icon}
             />

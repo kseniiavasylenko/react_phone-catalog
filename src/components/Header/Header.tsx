@@ -12,14 +12,14 @@ export const Header: React.FC = () => {
   const cartItemsCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   const getNavLinkClass = ({ isActive }: { isActive: boolean }) =>
-    isActive ? `${styles.navLink} ${styles.active}` : styles.navLink;
+    isActive ? `${styles.navLink}${styles.active}` : styles.navLink;
 
   return (
     <header className={styles.header}>
       <div className={styles.leftContent}>
         <Link to="/" className={styles.logo}>
           <img
-            src="{`{import.meta.env.BASE_URL}img/logo.svg`}"
+            src={`${import.meta.env.BASE_URL}img/logo.svg`}
             alt="Nice Gadgets Logo"
           />
         </Link>
@@ -43,7 +43,7 @@ export const Header: React.FC = () => {
       <div className={styles.rightContent}>
         <NavLink to="/favorites" className={styles.iconBtn}>
           <img
-            src="{`{import.meta.env.BASE_URL}img/icons/favourites.svg`}"
+            src={`${import.meta.env.BASE_URL}img/icons/favourites.svg`}
             alt="Favorites"
           />
           {favorites.length > 0 && (
@@ -53,7 +53,7 @@ export const Header: React.FC = () => {
 
         <NavLink to="/cart" className={styles.iconBtn}>
           <img
-            src="{`{import.meta.env.BASE_URL}img/icons/shopping-bag.svg`}"
+            src={`${import.meta.env.BASE_URL}img/icons/shopping-bag.svg`}
             alt="Cart"
           />
           {cartItemsCount > 0 && (

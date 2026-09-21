@@ -23,9 +23,16 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [cart, setCart] = useState<CartItem[]>(() => {
-    const saved = localStorage.getItem('cart');
+    try {
+      const saved = localStorage.getItem('cart');
 
-    return saved ? JSON.parse(saved) : [];
+      return saved ? JSON.parse(saved) : [];
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to parse cart from localStorage:', error);
+
+      return [];
+    }
   });
 
   useEffect(() => {
@@ -76,10 +83,13 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     return cart.some(item => item.product.id === productId);
   };
 
-  const totalPrice = cart.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
-    0,
-  );
+  const totalPrice = cart.reduce((sum, item) => {
+    // Безопасное определение актуальной цены товара
+    const itemPrice =
+      item.product.priceDiscount ?? item.product.price ?? item.product.fullPrice ?? 0;
+
+    return sum + itemPrice * item.quantity;
+  }, 0);
 
   const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
