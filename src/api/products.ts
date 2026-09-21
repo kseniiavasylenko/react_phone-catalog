@@ -2,7 +2,8 @@ import { Product } from '../types/Product';
 
 export const getProducts = async (): Promise<Product[]> => {
   const baseUrl = import.meta.env.BASE_URL;
-  const response = await fetch(`${baseUrl}api/phones.json`);
+  // Запрашиваем общий файл products.json вместо только phones.json
+  const response = await fetch(`${baseUrl}api/products.json`);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch products: ${response.statusText}`);

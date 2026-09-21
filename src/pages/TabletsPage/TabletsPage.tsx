@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ProductCard, Product } from '../../components/ProductCard';
+import { ProductCard } from '../../components/ProductCard';
+import { Product } from '../../types/Product';
+import { getProducts } from '../../api/products';
 import styles from './TabletsPage.module.scss';
 
 export const TabletsPage: React.FC = () => {
@@ -10,11 +12,11 @@ export const TabletsPage: React.FC = () => {
   useEffect(() => {
     setIsLoading(true);
 
-    // Загружаем каталог и фильтруем по категории 'tablets'
-    fetch('/api/products.json')
-      .then(res => res.json())
-      .then((data: Product[]) => {
-        const tabletProducts = data.filter(item => item.category === 'tablets');
+    getProducts()
+      .then(products => {
+        const tabletProducts = products.filter(
+          item => item.category === 'tablets',
+        );
 
         setTablets(tabletProducts);
       })
@@ -27,7 +29,10 @@ export const TabletsPage: React.FC = () => {
     <div className={styles.page}>
       <div className={styles.breadcrumbs}>
         <Link to="/">
-          <img src="img/icons/home.svg" alt="Home" />
+          <img
+            src={`${import.meta.env.BASE_URL}img/icons/home.svg`}
+            alt="Home"
+          />
         </Link>
         <span>›</span>
         <span>Tablets</span>
