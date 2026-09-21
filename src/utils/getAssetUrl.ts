@@ -7,7 +7,6 @@ export const getAssetUrl = (path?: string) => {
     return path;
   }
 
-  // убираем ведущие "/", "./" и "../"
   const cleanPath = path.replace(/^(\.{0,2}\/)+/, '');
 
   return `${import.meta.env.BASE_URL}${cleanPath}`;
