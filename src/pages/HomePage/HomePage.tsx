@@ -32,10 +32,7 @@ export const HomePage: React.FC = () => {
   const brandNewRef = useRef<HTMLDivElement>(null);
   const hotPricesRef = useRef<HTMLDivElement>(null);
 
-  const bannerImages = useMemo(
-    () => rawBannerImages.map(getAssetUrl),
-    [],
-  );
+  const bannerImages = useMemo(() => rawBannerImages.map(getAssetUrl), []);
 
   useEffect(() => {
     getProducts().then(setProducts);

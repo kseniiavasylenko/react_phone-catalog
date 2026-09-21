@@ -108,9 +108,15 @@ export const ProductDetailsPage: React.FC = () => {
 
     // 2. Загрузка товаров для карусели «You may also like»
     const fetchSuggested = Promise.all([
-      fetch(getAssetUrl('api/phones.json')).then(r => (r.ok ? r.json() : [])).catch(() => []),
-      fetch(getAssetUrl('api/tablets.json')).then(r => (r.ok ? r.json() : [])).catch(() => []),
-      fetch(getAssetUrl('api/accessories.json')).then(r => (r.ok ? r.json() : [])).catch(() => []),
+      fetch(getAssetUrl('api/phones.json'))
+        .then(r => (r.ok ? r.json() : []))
+        .catch(() => []),
+      fetch(getAssetUrl('api/tablets.json'))
+        .then(r => (r.ok ? r.json() : []))
+        .catch(() => []),
+      fetch(getAssetUrl('api/accessories.json'))
+        .then(r => (r.ok ? r.json() : []))
+        .catch(() => []),
     ]).then(([phones, tablets, accessories]) => {
       const allProducts: Product[] = [...phones, ...tablets, ...accessories];
       const filtered = allProducts.filter(
@@ -158,7 +164,9 @@ export const ProductDetailsPage: React.FC = () => {
 
     // Безопасный замен с точным совпадением фрагмента
     const parts = (productId || '').split('-');
-    const newParts = parts.map(part => (part === currentCapLower ? newCapLower : part));
+    const newParts = parts.map(part =>
+      part === currentCapLower ? newCapLower : part,
+    );
     const newProductId = newParts.join('-');
 
     if (newProductId && newProductId !== productId) {
@@ -175,7 +183,9 @@ export const ProductDetailsPage: React.FC = () => {
     const newColorLower = newColor.toLowerCase().replace(/\s+/g, '-');
 
     const parts = (productId || '').split('-');
-    const newParts = parts.map(part => (part === currentColorLower ? newColorLower : part));
+    const newParts = parts.map(part =>
+      part === currentColorLower ? newColorLower : part,
+    );
     const newProductId = newParts.join('-');
 
     if (newProductId && newProductId !== productId) {

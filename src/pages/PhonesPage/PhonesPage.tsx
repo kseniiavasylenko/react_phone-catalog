@@ -43,8 +43,7 @@ export const PhonesPage: React.FC = () => {
   }, [phones, sortBy]);
 
   const total = sortedProducts.length;
-  const itemsPerPage =
-    perPage === 'all' ? total : Number(perPage) || 16;
+  const itemsPerPage = perPage === 'all' ? total : Number(perPage) || 16;
 
   // 3. Расчет срезка для пагинации
   const visibleProducts = useMemo(() => {

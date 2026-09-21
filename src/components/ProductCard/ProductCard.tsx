@@ -2,24 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useFavorites } from '../../context/FavoritesContext';
 import { useCart } from '../../context/CartContext';
+import { Product } from '../../types/Product';
 import styles from './ProductCard.module.scss';
-
-export interface Product {
-  id: string;
-  itemId?: string;
-  category: string;
-  name: string;
-  fullPrice?: number;
-  priceRegular?: number;
-  price?: number;
-  priceDiscount?: number;
-  screen?: string;
-  capacity?: string;
-  ram?: string;
-  color?: string;
-  image?: string;
-  images?: string[];
-}
 
 const getAssetUrl = (path?: string) => {
   if (!path) {
@@ -32,7 +16,6 @@ const getAssetUrl = (path?: string) => {
 
   const baseUrl = import.meta.env.BASE_URL;
 
-  // Если путь уже содержит BASE_URL, не дублируем его
   if (path.startsWith(baseUrl)) {
     return path;
   }
@@ -49,15 +32,16 @@ export const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   const favorite = isFavorite(product.id);
   const inCart = isInCart(product.id);
 
-  // Определяем цену и картинку вне зависимости от формата JSON
   const currentPrice = product.priceDiscount ?? product.price ?? 0;
   const regularPrice = product.priceRegular ?? product.fullPrice ?? 0;
   const imageUrl = product.image || product.images?.[0] || '';
+  const productCategory = product.category || 'phones';
+  const productDetailsId = product.itemId || product.phoneId || product.id;
 
   return (
-    <div className={styles.card}>
+    <div className={styles.card} data-cy="cardsContainer">
       <Link
-        to={`/${product.category}/${product.itemId || product.id}`}
+        to={`/${productCategory}/${productDetailsId}`}
         className={styles.imageLink}
       >
         <img
@@ -68,7 +52,7 @@ export const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
       </Link>
 
       <Link
-        to={`/${product.category}/${product.itemId || product.id}`}
+        to={`/${productCategory}/${productDetailsId}`}
         className={styles.titleLink}
       >
         <h3 className={styles.title}>{product.name}</h3>
@@ -101,6 +85,7 @@ export const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
       <div className={styles.actions}>
         <button
           type="button"
+          data-cy="addToCart"
           className={`${styles.cartBtn} ${inCart ? styles.inCart : ''}`}
           onClick={() =>
             inCart ? removeFromCart(product.id) : addToCart(product)
@@ -111,9 +96,12 @@ export const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
 
         <button
           type="button"
+          data-cy="addToFavorites"
           className={styles.favoriteBtn}
           onClick={() =>
-            favorite ? removeFromFavorites(product.id) : addToFavorites(product)
+            favorite
+              ? removeFromFavorites(product.id)
+              : addToFavorites(product)
           }
         >
           <img

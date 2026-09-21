@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Product } from '../components/ProductCard';
+import { Product } from '../types/Product';
 
 interface FavoritesContextType {
   favorites: Product[];
@@ -11,6 +11,15 @@ interface FavoritesContextType {
 const FavoritesContext = createContext<FavoritesContextType | undefined>(
   undefined,
 );
+
+// Вспомогательная функция сопоставления ID
+const isSameProduct = (product: Product, targetId: string) => {
+  return (
+    product.id === targetId ||
+    product.itemId === targetId ||
+    product.phoneId === targetId
+  );
+};
 
 export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -34,7 +43,13 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const addToFavorites = (product: Product) => {
     setFavorites(prev => {
-      if (prev.some(item => item.id === product.id)) {
+      const exists = prev.some(
+        item =>
+          isSameProduct(item, product.id) ||
+          (product.itemId && isSameProduct(item, product.itemId)),
+      );
+
+      if (exists) {
         return prev;
       }
 
@@ -43,11 +58,11 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const removeFromFavorites = (productId: string) => {
-    setFavorites(prev => prev.filter(item => item.id !== productId));
+    setFavorites(prev => prev.filter(item => !isSameProduct(item, productId)));
   };
 
   const isFavorite = (productId: string) => {
-    return favorites.some(item => item.id === productId);
+    return favorites.some(item => isSameProduct(item, productId));
   };
 
   return (
