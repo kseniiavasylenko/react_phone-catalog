@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { getProducts } from '../../api/products';
 import { Product } from '../../types/Product';
 import { ProductCard } from '../../components/ProductCard';
-import { getAssetUrl } from '../../utils/getAssetUrl';
 import styles from './HomePage.module.scss';
 
 const bannerImages = [
@@ -142,7 +141,7 @@ export const HomePage: React.FC = () => {
             >
               {bannerImages.map((imgSrc, index) => (
                 <div key={imgSrc} className={styles.bannerSlide}>
-                  <img src={getAssetUrl(imgSrc)} alt={`Banner ${index + 1}`} />
+                  <img src={imgSrc} alt={`Banner ${index + 1}`} />
                 </div>
               ))}
             </div>
@@ -187,10 +186,7 @@ export const HomePage: React.FC = () => {
         <div className={styles.categoriesGrid}>
           <Link to="/phones" className={styles.categoryCard}>
             <div className={styles.categoryImageWrapper}>
-              <img
-                src={getAssetUrl('/img/category-phones.png')}
-                alt="Mobile phones"
-              />
+              <img src="/img/category-phones.png" alt="Mobile phones" />
             </div>
             <h3 className={styles.categoryName}>Mobile phones</h3>
             <span className={styles.categoryCount}>{phonesCount} models</span>
@@ -198,10 +194,7 @@ export const HomePage: React.FC = () => {
 
           <Link to="/tablets" className={styles.categoryCard}>
             <div className={styles.categoryImageWrapper}>
-              <img
-                src={getAssetUrl('/img/category-tablets.png')}
-                alt="Tablets"
-              />
+              <img src="/img/category-tablets.png" alt="Tablets" />
             </div>
             <h3 className={styles.categoryName}>Tablets</h3>
             <span className={styles.categoryCount}>{tabletsCount} models</span>
@@ -209,10 +202,7 @@ export const HomePage: React.FC = () => {
 
           <Link to="/accessories" className={styles.categoryCard}>
             <div className={styles.categoryImageWrapper}>
-              <img
-                src={getAssetUrl('/img/category-accessories.png')}
-                alt="Accessories"
-              />
+              <img src="/img/category-accessories.png" alt="Accessories" />
             </div>
             <h3 className={styles.categoryName}>Accessories</h3>
             <span className={styles.categoryCount}>

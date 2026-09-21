@@ -4,13 +4,18 @@ import { useFavorites } from '../../context/FavoritesContext';
 import { useCart } from '../../context/CartContext';
 import styles from './Header.module.scss';
 
-const BASE = import.meta.env.BASE_URL;
+// Безопасное формирование пути
+const getPath = (path: string) => {
+  const base = import.meta.env.BASE_URL;
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+
+  return `${base}${cleanPath}`;
+};
 
 export const Header: React.FC = () => {
   const { favorites } = useFavorites();
   const { cart } = useCart();
 
-  // Вычисляем общее количество товаров в корзине
   const cartItemsCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   const getNavLinkClass = ({ isActive }: { isActive: boolean }) =>
@@ -20,7 +25,7 @@ export const Header: React.FC = () => {
     <header className={styles.header}>
       <div className={styles.leftContent}>
         <Link to="/" className={styles.logo}>
-          <img src={`${BASE}img/logo.svg`} alt="Nice Gadgets Logo" />
+          <img src={getPath('img/logo.svg')} alt="Nice Gadgets Logo" />
         </Link>
 
         <nav className={styles.nav}>
@@ -41,14 +46,14 @@ export const Header: React.FC = () => {
 
       <div className={styles.rightContent}>
         <NavLink to="/favorites" className={styles.iconBtn}>
-          <img src={`${BASE}img/icons/favourites.svg`} alt="Favorites" />
+          <img src={getPath('img/icons/favourites.svg')} alt="Favorites" />
           {favorites.length > 0 && (
             <span className={styles.badge}>{favorites.length}</span>
           )}
         </NavLink>
 
         <NavLink to="/cart" className={styles.iconBtn}>
-          <img src={`${BASE}img/icons/shopping-bag.svg`} alt="Cart" />
+          <img src={getPath('img/icons/shopping-bag.svg')} alt="Cart" />
           {cartItemsCount > 0 && (
             <span className={styles.badge}>{cartItemsCount}</span>
           )}
