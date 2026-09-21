@@ -53,7 +53,7 @@ export const CartItem: React.FC<Props> = ({
         aria-label="Remove item"
       >
         <img
-          src="/img/icons/close.svg"
+          src="img/icons/close.svg"
           alt="Remove"
           className={styles.removeIcon}
         />

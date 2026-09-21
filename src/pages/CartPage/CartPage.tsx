@@ -44,7 +44,7 @@ export const CartPage: React.FC = () => {
                     onClick={() => removeFromCart(product.id)}
                     aria-label="Remove item"
                   >
-                    <img src="/img/icons/close.svg" alt="Close" />
+                    <img src="img/icons/close.svg" alt="Close" />
                   </button>
 
                   <img
