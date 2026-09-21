@@ -28,10 +28,7 @@ export const AccessoriesPage: React.FC = () => {
     <div className={styles.page}>
       <div className={styles.breadcrumbs}>
         <Link to="/">
-          <img
-            src="{`{import.meta.env.BASE_URL}img/icons/home.svg`}"
-            alt="Home"
-          />
+          <img src="/img/icons/home.svg" alt="Home" />
         </Link>
         <span>›</span>
         <span>Accessories</span>

@@ -30,16 +30,9 @@ const getAssetUrl = (path?: string) => {
     return path;
   }
 
-  const baseUrl = import.meta.env.BASE_URL;
-
-  // Если путь уже содержит BASE_URL, не дублируем его
-  if (path.startsWith(baseUrl)) {
-    return path;
-  }
-
   const cleanPath = path.startsWith('/') ? path.slice(1) : path;
 
-  return `${baseUrl}${cleanPath}`;
+  return `${import.meta.env.BASE_URL}${cleanPath}`;
 };
 
 export const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
@@ -119,8 +112,8 @@ export const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
           <img
             src={getAssetUrl(
               favorite
-                ? 'img/icons/favourites-filled.svg'
-                : 'img/icons/favourites.svg',
+                ? '/img/icons/favourites-filled.svg'
+                : '/img/icons/favourites.svg',
             )}
             alt="Favorite"
           />

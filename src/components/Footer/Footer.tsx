@@ -15,7 +15,7 @@ export const Footer = () => {
         {/* 1. Логотип */}
         <NavLink to="/" className={styles.logoLink}>
           <img
-            src="img/logo.svg"
+            src="/img/logo.svg"
             alt="Product Catalog Logo"
             className={styles.logo}
           />
@@ -59,7 +59,7 @@ export const Footer = () => {
             aria-label="Back to top"
           >
             <img
-              src="{import.meta.env.BASE_URL}img/icons/arrow-up.svg"
+              src="/img/icons/arrow-up.svg"
               alt="Arrow up"
               className={styles.icon}
             />
