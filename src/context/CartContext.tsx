@@ -84,9 +84,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
 
     setCart(prevCart =>
       prevCart.map(item =>
-        isSameProduct(item.product, productId)
-          ? { ...item, quantity }
-          : item,
+        isSameProduct(item.product, productId) ? { ...item, quantity } : item,
       ),
     );
   };

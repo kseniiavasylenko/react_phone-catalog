@@ -99,9 +99,7 @@ export const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
           data-cy="addToFavorites"
           className={styles.favoriteBtn}
           onClick={() =>
-            favorite
-              ? removeFromFavorites(product.id)
-              : addToFavorites(product)
+            favorite ? removeFromFavorites(product.id) : addToFavorites(product)
           }
         >
           <img

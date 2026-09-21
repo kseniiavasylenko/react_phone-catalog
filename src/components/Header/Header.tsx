@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
+import { getAssetUrl } from '../../utils/getAssetUrl';
 import { useFavorites } from '../../context/FavoritesContext';
 import { useCart } from '../../context/CartContext';
 import styles from './Header.module.scss';
@@ -18,10 +19,7 @@ export const Header: React.FC = () => {
     <header className={styles.header}>
       <div className={styles.leftContent}>
         <Link to="/" className={styles.logo}>
-          <img
-            src={`${import.meta.env.BASE_URL}img/logo.svg`}
-            alt="Nice Gadgets Logo"
-          />
+          <img src={getAssetUrl('img/logo.svg')} alt="Nice Gadgets Logo" />
         </Link>
 
         <nav className={styles.nav}>
