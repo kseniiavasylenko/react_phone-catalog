@@ -99,7 +99,11 @@ export const Header: React.FC = () => {
       {isMenuOpen && (
         <div className={styles.mobileMenu}>
           <nav className={styles.mobileNav}>
-            <NavLink to="/" className={getMobileNavLinkClass} onClick={closeMenu}>
+            <NavLink
+              to="/"
+              className={getMobileNavLinkClass}
+              onClick={closeMenu}
+            >
               Home
             </NavLink>
             <NavLink

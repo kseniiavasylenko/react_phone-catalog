@@ -20,7 +20,37 @@ export const Pagination: React.FC<Props> = ({
     return null;
   }
 
-  const pages = Array.from({ length: pageCount }, (_, i) => i + 1);
+  // Функция расчета видимых страниц (максимум 4 кнопки за раз)
+  const getVisiblePages = () => {
+    const maxVisible = 4;
+
+    if (pageCount <= maxVisible) {
+      return Array.from({ length: pageCount }, (_, i) => i + 1);
+    }
+
+    let start = currentPage - 1;
+    let end = currentPage + 2;
+
+    if (start < 1) {
+      start = 1;
+      end = maxVisible;
+    }
+
+    if (end > pageCount) {
+      end = pageCount;
+      start = pageCount - maxVisible + 1;
+    }
+
+    const visiblePages = [];
+
+    for (let i = start; i <= end; i++) {
+      visiblePages.push(i);
+    }
+
+    return visiblePages;
+  };
+
+  const pages = getVisiblePages();
 
   return (
     <div className={styles.pagination}>

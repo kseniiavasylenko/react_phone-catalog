@@ -84,8 +84,6 @@
   flex-direction: column;
   gap: 8px;
   margin-bottom: 16px;
-  /* Заменяем flex-grow: 1 на фиксированный или стандартный поток,
-     чтобы карточка не толкала границы сетки вниз */
 }
 
 .specRow {

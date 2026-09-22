@@ -38,8 +38,6 @@ const getAssetUrl = (path?: string) => {
 
 interface ProductCardProps {
   product: Product;
-  // Если true — скидка не отображается, даже если она есть у товара.
-  // Используется, например, для секции "Brand new models".
   hideDiscount?: boolean;
 }
 
@@ -50,20 +48,27 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const { isFavorite, addToFavorites, removeFromFavorites } = useFavorites();
   const { isInCart, addToCart, removeFromCart } = useCart();
 
-  const favorite = isFavorite(product.id);
-  const inCart = isInCart(product.id);
+  // 1. Единый идентификатор товара (itemId в приоритете, так как он уникален и нужен для URL)
+  const productId = product.itemId || product.id;
 
-  const currentPrice = product.price ?? product.priceDiscount ?? 0;
-  const regularPrice =
-    product.fullPrice ?? product.priceRegular ?? currentPrice;
+  const favorite = isFavorite(productId);
+  const inCart = isInCart(productId);
+
+  // 2. Безопасное определение цен (price = текущая цена/скидка, fullPrice = полная)
+  const currentPrice = Number(
+    product.price ?? product.priceDiscount ?? product.fullPrice ?? 0,
+  );
+  const regularPrice = Number(
+    product.fullPrice ?? product.priceRegular ?? currentPrice,
+  );
+
   const imageUrl = product.image || product.images?.[0] || '';
-
   const hasDiscount = !hideDiscount && regularPrice > currentPrice;
 
   return (
     <div className={styles.card}>
       <Link
-        to={`/${product.category}/${product.itemId || product.id}`}
+        to={`/${product.category}/${productId}`}
         className={styles.imageLink}
       >
         <img
@@ -74,7 +79,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       </Link>
 
       <Link
-        to={`/${product.category}/${product.itemId || product.id}`}
+        to={`/${product.category}/${productId}`}
         className={styles.titleLink}
       >
         <h3 className={styles.title}>{product.name}</h3>
@@ -109,7 +114,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           type="button"
           className={`${styles.cartBtn} ${inCart ? styles.inCart : ''}`}
           onClick={() =>
-            inCart ? removeFromCart(product.id) : addToCart(product)
+            inCart ? removeFromCart(productId) : addToCart(product)
           }
         >
           {inCart ? 'Added' : 'Add to cart'}
@@ -119,7 +124,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           type="button"
           className={styles.favoriteBtn}
           onClick={() =>
-            favorite ? removeFromFavorites(product.id) : addToFavorites(product)
+            favorite ? removeFromFavorites(productId) : addToFavorites(product)
           }
         >
           <img

@@ -11,7 +11,6 @@ export interface CartItemType {
 
 interface Props {
   item: CartItemType;
-  // В будущем передадим реальные функции из CartContext
   onQuantityChange?: (productId: string, quantity: number) => void;
   onRemove?: (productId: string) => void;
 }
@@ -22,27 +21,41 @@ export const CartItem: React.FC<Props> = ({
   onRemove,
 }) => {
   const { product, quantity } = item;
-  const { itemId, category, name, price, image } = product;
+
+  if (!product) {
+    return null;
+  }
+
+  const { itemId, category, name, price, fullPrice, image } = product;
+
+  const idToUse = itemId || product.id;
 
   const handleDecrease = () => {
     if (quantity > 1 && onQuantityChange) {
-      onQuantityChange(itemId, quantity - 1);
+      onQuantityChange(idToUse, quantity - 1);
     }
   };
 
   const handleIncrease = () => {
     if (onQuantityChange) {
-      onQuantityChange(itemId, quantity + 1);
+      onQuantityChange(idToUse, quantity + 1);
     }
   };
 
   const handleRemove = () => {
     if (onRemove) {
-      onRemove(itemId);
+      onRemove(idToUse);
     }
   };
 
-  const totalPrice = price * quantity;
+  // Безопасное определение цены: проверяем price, затем fullPrice, иначе 0
+  const actualPrice = Number(price ?? fullPrice ?? 0);
+  const totalPrice = actualPrice * quantity;
+
+  // Формирование корректного пути к картинке
+  const imageUrl = image?.startsWith('http')
+    ? image
+    : `${getBaseUrl()}${image}`;
 
   return (
     <div className={styles.cartItem}>
@@ -61,9 +74,9 @@ export const CartItem: React.FC<Props> = ({
       </button>
 
       {/* 2. Изображение и Название */}
-      <Link to={`/${category}/${itemId}`} className={styles.productInfo}>
+      <Link to={`/${category}/${idToUse}`} className={styles.productInfo}>
         <div className={styles.imageContainer}>
-          <img src={image} alt={name} className={styles.image} />
+          <img src={imageUrl} alt={name} className={styles.image} />
         </div>
         <p className={styles.title}>{name}</p>
       </Link>
@@ -91,7 +104,7 @@ export const CartItem: React.FC<Props> = ({
           </button>
         </div>
 
-        {/* 4. Цена */}
+        {/* 4. Безопасный вывод цены */}
         <div className={styles.priceBlock}>
           <span className={styles.price}>${totalPrice}</span>
         </div>

@@ -134,13 +134,9 @@
   }
 }
 
-// Полноэкранное мобильное меню, открывается под шапкой
 .mobileMenu {
   position: fixed;
-  top: 64px;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 64px 0 0;
   background-color: #fff;
   z-index: 99;
   display: flex;

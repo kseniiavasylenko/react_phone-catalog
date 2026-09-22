@@ -19,9 +19,7 @@ export const TabletsPage: React.FC = () => {
     // Загружаем каталог и фильтруем по категории 'tablets'
     getProducts()
       .then((data: Product[]) => {
-        const tabletProducts = data.filter(
-          item => item.category === 'tablets',
-        );
+        const tabletProducts = data.filter(item => item.category === 'tablets');
 
         setTablets(tabletProducts);
       })
