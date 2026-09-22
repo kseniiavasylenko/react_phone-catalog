@@ -3,11 +3,11 @@ import { NavLink, Link } from 'react-router-dom';
 import { useFavorites } from '../../context/FavoritesContext';
 import { useCart } from '../../context/CartContext';
 import styles from './Header.module.scss';
+import { getBaseUrl } from '../utils/BaseUrl';
 
 export const Header: React.FC = () => {
   const { favorites } = useFavorites();
   const { cart } = useCart();
-  const baseUrl = import.meta.env.BASE_URL;
 
   // Вычисляем общее количество товаров в корзине
   const cartItemsCount = cart.reduce((total, item) => total + item.quantity, 0);
@@ -19,7 +19,7 @@ export const Header: React.FC = () => {
     <header className={styles.header}>
       <div className={styles.leftContent}>
         <Link to="/" className={styles.logo}>
-          <img src="img/logo.svg" alt="Nice Gadgets Logo" />
+          <img src={`${getBaseUrl()}img/logo.svg`} alt="Nice Gadgets Logo" />
         </Link>
 
         <nav className={styles.nav}>
@@ -40,14 +40,17 @@ export const Header: React.FC = () => {
 
       <div className={styles.rightContent}>
         <NavLink to="/favorites" className={styles.iconBtn}>
-          <img src="img/icons/favourites.svg" alt="Favorites" />
+          <img
+            src={`${getBaseUrl()}img/icons/favourites.svg`}
+            alt="Favorites"
+          />
           {favorites.length > 0 && (
             <span className={styles.badge}>{favorites.length}</span>
           )}
         </NavLink>
 
         <NavLink to="/cart" className={styles.iconBtn}>
-          <img src="img/icons/shopping-bag.svg" alt="Cart" />
+          <img src={`${getBaseUrl()}img/icons/shopping-bag.svg`} alt="Cart" />
           {cartItemsCount > 0 && (
             <span className={styles.badge}>{cartItemsCount}</span>
           )}

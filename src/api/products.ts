@@ -1,8 +1,8 @@
 import { Product } from '../types/Product';
+import { getBaseUrl } from '../utils/BaseUrl';
 
 export const getProducts = async (): Promise<Product[]> => {
-  const baseUrl = import.meta.env.BASE_URL;
-  const response = await fetch(`${baseUrl}api/products.json`);
+  const response = await fetch(`${getBaseUrl()}api/products.json`);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch products: ${response.statusText}`);
