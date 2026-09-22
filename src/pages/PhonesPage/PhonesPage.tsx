@@ -19,7 +19,6 @@ export const PhonesPage: React.FC = () => {
     });
   }, []);
 
-  // 1. Сортировка товаров
   const sortedProducts = useMemo(() => {
     return [...products].sort((a, b) => {
       switch (sortBy) {
@@ -35,7 +34,6 @@ export const PhonesPage: React.FC = () => {
     });
   }, [products, sortBy]);
 
-  // 2. Расчет среза для пагинации
   const itemsPerPage =
     perPage === 'all' ? sortedProducts.length : Number(perPage);
   const total = sortedProducts.length;
@@ -80,7 +78,9 @@ export const PhonesPage: React.FC = () => {
             <option value="name">Alphabetically</option>
             <option value="price">Cheapest</option>
           </select>
+        </div>
 
+        <div className={styles.filterGroupSmall}>
           <label htmlFor="per-page-select" className={styles.label}>
             Items on page
           </label>

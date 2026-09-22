@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import styles from './CartPage.module.scss';
+import { getBaseUrl } from '../../utils/BaseUrl';
 
 export const CartPage: React.FC = () => {
   const {
@@ -44,7 +45,10 @@ export const CartPage: React.FC = () => {
                     onClick={() => removeFromCart(product.id)}
                     aria-label="Remove item"
                   >
-                    <img src="/img/icons/close.svg" alt="Close" />
+                    <img
+                      src={`${getBaseUrl()}img/icons/close.svg`}
+                      alt="Close"
+                    />
                   </button>
 
                   <img

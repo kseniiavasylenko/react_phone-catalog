@@ -5,18 +5,19 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 24px 16px 64px;
+  /* Убираем нижний padding, чтобы он не суммировался с отступами секций и футера */
+  padding: 24px 16px 0;
 
   @include tablet {
-    padding: 32px 24px 80px;
+    padding: 32px 24px 0;
   }
 
   @include desktop {
-    padding: 32px 32px 80px;
+    padding: 32px 32px 0;
   }
 
   @include desktop-xl {
-    padding: 48px 32px 96px;
+    padding: 48px 32px 0;
   }
 }
 
@@ -41,6 +42,11 @@
 
   @include tablet-up {
     margin-bottom: 80px;
+  }
+
+  /* Обнуляем margin-bottom у последней секции */
+  &:last-child {
+    margin-bottom: 0;
   }
 }
 
@@ -252,7 +258,8 @@
   flex-wrap: nowrap;
   gap: 16px;
   width: 100%;
-  padding-bottom: 16px;
+  /* Убран padding-bottom: 16px, который создавал синюю полосу снизу слайдера */
+  padding-bottom: 0;
   overflow-x: auto;
   scroll-behavior: smooth;
   scrollbar-width: none;

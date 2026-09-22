@@ -36,17 +36,29 @@ const getAssetUrl = (path?: string) => {
   return `${getBaseUrl()}${cleanPath}`;
 };
 
-export const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
+interface ProductCardProps {
+  product: Product;
+  // Если true — скидка не отображается, даже если она есть у товара.
+  // Используется, например, для секции "Brand new models".
+  hideDiscount?: boolean;
+}
+
+export const ProductCard: React.FC<ProductCardProps> = ({
+  product,
+  hideDiscount = false,
+}) => {
   const { isFavorite, addToFavorites, removeFromFavorites } = useFavorites();
   const { isInCart, addToCart, removeFromCart } = useCart();
 
   const favorite = isFavorite(product.id);
   const inCart = isInCart(product.id);
 
-  // Определяем цену и картинку вне зависимости от формата JSON
-  const currentPrice = product.priceDiscount ?? product.price ?? 0;
-  const regularPrice = product.priceRegular ?? product.fullPrice ?? 0;
+  const currentPrice = product.price ?? product.priceDiscount ?? 0;
+  const regularPrice =
+    product.fullPrice ?? product.priceRegular ?? currentPrice;
   const imageUrl = product.image || product.images?.[0] || '';
+
+  const hasDiscount = !hideDiscount && regularPrice > currentPrice;
 
   return (
     <div className={styles.card}>
@@ -70,7 +82,7 @@ export const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
 
       <div className={styles.priceRow}>
         <span className={styles.price}>${currentPrice}</span>
-        {regularPrice > currentPrice && (
+        {hasDiscount && (
           <span className={styles.fullPrice}>${regularPrice}</span>
         )}
       </div>

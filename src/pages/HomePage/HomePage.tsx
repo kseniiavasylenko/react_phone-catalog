@@ -82,7 +82,16 @@ export const HomePage: React.FC = () => {
   };
 
   const brandNew = useMemo(() => {
-    return [...products]
+    // Отбираем товары без скидки (полная цена равна текущей цене)
+    const withoutDiscount = products.filter(
+      product => product.fullPrice === product.price,
+    );
+
+    // Если товары без скидки найдены — берем их, иначе фоллбек на все товары
+    const targetProducts =
+      withoutDiscount.length > 0 ? withoutDiscount : products;
+
+    return [...targetProducts]
       .sort((a, b) => (b.year || 0) - (a.year || 0))
       .slice(0, 8);
   }, [products]);
@@ -179,6 +188,55 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
+      {/* Brand new models Section */}
+      <section className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>Brand new models</h2>
+          <div className={styles.sliderButtons}>
+            <button
+              type="button"
+              className={styles.sliderBtn}
+              onClick={() => handleScroll(brandNewRef, 'left')}
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path
+                  d="M10 4L6 8L10 12"
+                  stroke="#313237"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+            <button
+              type="button"
+              className={styles.sliderBtn}
+              onClick={() => handleScroll(brandNewRef, 'right')}
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path
+                  d="M6 4L10 8L6 12"
+                  stroke="#313237"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div className={styles.productsList} ref={brandNewRef}>
+          {brandNew.map(product => (
+            <div key={product.id} className={styles.productCardWrapper}>
+              {/* hideDiscount: в этой секции скидка не показывается,
+                  даже если товар попал сюда через фоллбек со скидкой */}
+              <ProductCard product={product} hideDiscount />
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Shop by Category Section */}
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
@@ -222,53 +280,6 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Brand new models Section */}
-      <section className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>Brand new models</h2>
-          <div className={styles.sliderButtons}>
-            <button
-              type="button"
-              className={styles.sliderBtn}
-              onClick={() => handleScroll(brandNewRef, 'left')}
-            >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path
-                  d="M10 4L6 8L10 12"
-                  stroke="#313237"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-            <button
-              type="button"
-              className={styles.sliderBtn}
-              onClick={() => handleScroll(brandNewRef, 'right')}
-            >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path
-                  d="M6 4L10 8L6 12"
-                  stroke="#313237"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        <div className={styles.productsList} ref={brandNewRef}>
-          {brandNew.map(product => (
-            <div key={product.id} className={styles.productCardWrapper}>
-              <ProductCard product={product} />
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* Hot prices Section */}
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
@@ -307,6 +318,7 @@ export const HomePage: React.FC = () => {
           </div>
         </div>
 
+        {/* Hot prices: скидки показываются как обычно (hideDiscount не передан) */}
         <div className={styles.productsList} ref={hotPricesRef}>
           {hotPrices.map(product => (
             <div key={product.id} className={styles.productCardWrapper}>

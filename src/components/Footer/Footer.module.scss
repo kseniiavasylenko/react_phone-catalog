@@ -4,6 +4,17 @@
   width: 100%;
   background-color: #fff;
   border-top: 1px solid #e2e6e9;
+
+  /* Отступ от контента страницы (пагинации или сетки) до линия футера */
+  margin-top: 64px;
+
+  @include tablet {
+    margin-top: 80px;
+  }
+
+  @include desktop {
+    margin-top: 80px;
+  }
 }
 
 .container {
@@ -73,7 +84,7 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
-  align-self: center; /* Центрируем кнопку на мобильных */
+  align-self: center;
 
   @include tablet-up {
     align-self: auto;
@@ -93,11 +104,11 @@
   justify-content: center;
   width: 32px;
   height: 32px;
+  padding: 0;
   background-color: #fff;
   border: 1px solid #b4bdc3;
   cursor: pointer;
   transition: border-color 0.2s ease;
-  padding: 0;
 
   &:hover {
     border-color: #313237;

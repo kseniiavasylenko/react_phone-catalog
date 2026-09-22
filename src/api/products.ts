@@ -11,6 +11,7 @@ export const getProducts = async (): Promise<Product[]> => {
   const data: Product[] = await response.json();
 
   return data.map(product => {
+    // 1. Нормализация пути к изображению
     const rawImage =
       product.image || (Array.isArray(product.images) ? product.images[0] : '');
     let cleanPath = rawImage
@@ -21,9 +22,12 @@ export const getProducts = async (): Promise<Product[]> => {
       cleanPath = `img/${cleanPath}`;
     }
 
-    // Безопасное извлечение цен
-    const price = product.price ?? product.priceDiscount ?? 0;
-    const fullPrice = product.fullPrice ?? product.priceRegular ?? price;
+    const fullPrice = Number(
+      product.fullPrice ?? product.priceRegular ?? product.price ?? 0,
+    );
+
+    const rawDiscountPrice = product.priceDiscount ?? product.price;
+    const price = rawDiscountPrice ? Number(rawDiscountPrice) : fullPrice;
 
     return {
       ...product,
