@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useFavorites } from '../../context/FavoritesContext';
 import { useCart } from '../../context/CartContext';
 import styles from './ProductCard.module.scss';
+import { getBaseUrl } from '../../utils/BaseUrl';
 
 export interface Product {
   id: string;
@@ -32,7 +33,7 @@ const getAssetUrl = (path?: string) => {
 
   const cleanPath = path.startsWith('/') ? path.slice(1) : path;
 
-  return `${import.meta.env.BASE_URL}${cleanPath}`;
+  return `${getBaseUrl()}${cleanPath}`;
 };
 
 export const ProductCard: React.FC<{ product: Product }> = ({ product }) => {

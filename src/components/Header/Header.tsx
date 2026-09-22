@@ -3,7 +3,7 @@ import { NavLink, Link } from 'react-router-dom';
 import { useFavorites } from '../../context/FavoritesContext';
 import { useCart } from '../../context/CartContext';
 import styles from './Header.module.scss';
-import { getBaseUrl } from '../utils/BaseUrl';
+import { getBaseUrl } from '../../utils/BaseUrl';
 
 export const Header: React.FC = () => {
   const { favorites } = useFavorites();

@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Product } from '../../types/Product';
 import styles from './CartItem.module.scss';
+import { getBaseUrl } from '../../utils/BaseUrl';
 
 export interface CartItemType {
   product: Product;
@@ -53,7 +54,7 @@ export const CartItem: React.FC<Props> = ({
         aria-label="Remove item"
       >
         <img
-          src="img/icons/close.svg"
+          src={`${getBaseUrl()}img/icons/close.svg`}
           alt="Remove"
           className={styles.removeIcon}
         />
