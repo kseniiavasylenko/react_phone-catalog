@@ -19,7 +19,7 @@ export const Header: React.FC = () => {
     <header className={styles.header}>
       <div className={styles.leftContent}>
         <Link to="/" className={styles.logo}>
-          <img src={`${baseUrl}img/logo.svg`} alt="Nice Gadgets Logo" />
+          <img src="img/logo.svg" alt="Nice Gadgets Logo" />
         </Link>
 
         <nav className={styles.nav}>
@@ -40,7 +40,7 @@ export const Header: React.FC = () => {
 
       <div className={styles.rightContent}>
         <NavLink to="/favorites" className={styles.iconBtn}>
-          <img src={`${baseUrl}img/icons/favourites.svg`} alt="Favorites" />
+          <img src="img/icons/favourites.svg" alt="Favorites" />
           {favorites.length > 0 && (
             <span className={styles.badge}>{favorites.length}</span>
           )}
