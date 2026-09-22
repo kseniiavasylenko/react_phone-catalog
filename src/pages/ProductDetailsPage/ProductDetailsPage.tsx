@@ -4,6 +4,7 @@ import { useFavorites } from '../../context/FavoritesContext';
 import { useCart } from '../../context/CartContext';
 import { Product, ProductCard } from '../../components/ProductCard';
 import styles from './ProductDetailsPage.module.scss';
+import { getBaseUrl } from '../../utils/BaseUrl';
 
 interface ProductDetails extends Product {
   capacityAvailable?: string[];
@@ -29,20 +30,6 @@ const COLOR_MAP: Record<string, string> = {
   silver: '#e2e4e1',
   rosegold: '#e8c5c8',
   coral: '#ff6f61',
-};
-
-const getAssetUrl = (path?: string) => {
-  if (!path) {
-    return '';
-  }
-
-  if (path.startsWith('http')) {
-    return path;
-  }
-
-  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-
-  return `${import.meta.env.BASE_URL}${cleanPath}`;
 };
 
 // Функция очищает название товара от указания конкретной памяти и цвета для заголовка h1
@@ -83,7 +70,7 @@ export const ProductDetailsPage: React.FC = () => {
     setIsLoading(true);
 
     // 1. Загрузка данных текущего товара
-    const fetchCurrentProduct = fetch(getAssetUrl(`api/${category}.json`))
+    const fetchCurrentProduct = fetch(`${getBaseUrl()}api/${category}.json`)
       .then(res => res.json())
       .then((data: ProductDetails[]) => {
         const found = data.find(
@@ -100,13 +87,13 @@ export const ProductDetailsPage: React.FC = () => {
 
     // 2. Загрузка товаров для карусели «You may also like» со всех категорий
     const fetchSuggested = Promise.all([
-      fetch(getAssetUrl('api/phones.json'))
+      fetch(`${getBaseUrl()}api/phones.json`)
         .then(r => r.json())
         .catch(() => []),
-      fetch(getAssetUrl('api/tablets.json'))
+      fetch(`${getBaseUrl()}api/tablets.json`)
         .then(r => r.json())
         .catch(() => []),
-      fetch(getAssetUrl('api/accessories.json'))
+      fetch(`${getBaseUrl()}api/accessories.json`)
         .then(r => r.json())
         .catch(() => []),
     ]).then(([phones, tablets, accessories]) => {
@@ -182,7 +169,7 @@ export const ProductDetailsPage: React.FC = () => {
       {/* Хлебные крошки */}
       <div className={styles.breadcrumbs}>
         <Link to="/">
-          <img src={getAssetUrl('img/icons/home.svg')} alt="Home" />
+          <img src={`${getBaseUrl()}img/icons/home.svg`} alt="Home" />
         </Link>
         <span>›</span>
         <Link to={`/${category}`}>{category}</Link>
@@ -214,13 +201,13 @@ export const ProductDetailsPage: React.FC = () => {
                 className={`${styles.thumbBtn} ${selectedImage === img ? styles.activeThumb : ''}`}
                 onClick={() => setSelectedImage(img)}
               >
-                <img src={getAssetUrl(img)} alt="Thumbnail" />
+                <img src={`${getBaseUrl()}${img}`} alt="Thumbnail" />
               </button>
             ))}
           </div>
 
           <div className={styles.mainImageContainer}>
-            <img src={getAssetUrl(selectedImage)} alt={product.name} />
+            <img src={`${getBaseUrl()}${selectedImage}`} alt={product.name} />
           </div>
         </div>
 
@@ -298,11 +285,11 @@ export const ProductDetailsPage: React.FC = () => {
               }
             >
               <img
-                src={getAssetUrl(
+                src={`${getBaseUrl()}${
                   favorite
                     ? 'img/icons/favourites-filled.svg'
-                    : 'img/icons/favourites.svg',
-                )}
+                    : 'img/icons/favourites.svg'
+                }`}
                 alt="Favorite"
               />
             </button>
