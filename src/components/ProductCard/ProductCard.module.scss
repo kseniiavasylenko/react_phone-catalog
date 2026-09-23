@@ -1,11 +1,11 @@
 .card {
   display: flex;
   flex-direction: column;
-  padding: 24px 16px; /* Уменьшили вертикальный паддинг с 32px до 24px */
+  padding: 24px 16px;
   background-color: #fff;
   border: 1px solid #e2e6e9;
   box-sizing: border-box;
-  height: 100%; /* Чтобы карточка занимала высоту ячейки сетки, но не раздувала контейнер */
+  height: 100%;
   transition: box-shadow 0.3s, border-color 0.3s;
 
   &:hover {
@@ -105,7 +105,7 @@
 .actions {
   display: flex;
   gap: 8px;
-  margin-top: auto; /* Выравниваем кнопки к низу карточки аккуратно */
+  margin-top: auto;
 }
 
 .cartBtn {
@@ -117,7 +117,7 @@
   font-size: 14px;
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
 
   &:hover {
     box-shadow: 0 3px 13px rgba(23, 32, 49, 0.26);
@@ -127,6 +127,10 @@
     background-color: #fff;
     color: #27ae60;
     border: 1px solid #e2e6e9;
+
+    &:hover {
+      border-color: #27ae60;
+    }
   }
 }
 
@@ -143,6 +147,10 @@
 
   &:hover {
     border-color: #0f0f11;
+  }
+
+  &.isFavorite {
+    border-color: #e2e6e9;
   }
 
   img {

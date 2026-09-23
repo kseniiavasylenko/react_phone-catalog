@@ -1,15 +1,20 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { getProducts } from '../../api/products';
 import { Product } from '../../types/Product';
 import { ProductCard } from '../../components/ProductCard';
 import { Pagination } from '../../components/Pagination';
 import styles from './PhonesPage.module.scss';
+import { getBaseUrl } from '../../utils/BaseUrl';
 
 export const PhonesPage: React.FC = () => {
   const [products, setPhones] = useState<Product[]>([]);
-  const [sortBy, setSortBy] = useState<string>('age');
-  const [perPage, setPerPage] = useState<string>('16');
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Считываем значение из URL или ставим дефолт
+  const sortBy = searchParams.get('sort') || 'age';
+  const perPage = searchParams.get('perPage') || '16';
+  const currentPage = Number(searchParams.get('page')) || 1;
 
   useEffect(() => {
     getProducts().then((data: Product[]) => {
@@ -48,18 +53,45 @@ export const PhonesPage: React.FC = () => {
     return sortedProducts.slice(start, start + itemsPerPage);
   }, [sortedProducts, currentPage, itemsPerPage, perPage]);
 
+  // Обновляем searchParams при изменении фильтров
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSortBy(e.target.value);
-    setCurrentPage(1);
+    const newParams = new URLSearchParams(searchParams);
+
+    newParams.set('sort', e.target.value);
+    newParams.set('page', '1');
+    setSearchParams(newParams);
   };
 
   const handlePerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setPerPage(e.target.value);
-    setCurrentPage(1);
+    const newParams = new URLSearchParams(searchParams);
+
+    newParams.set('perPage', e.target.value);
+    newParams.set('page', '1');
+    setSearchParams(newParams);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    const newParams = new URLSearchParams(searchParams);
+
+    newParams.set('page', String(newPage));
+    setSearchParams(newParams);
   };
 
   return (
     <div className={styles.container}>
+      {/* ХЛЕБНЫЕ КРОШКИ */}
+      <div className={styles.breadcrumbs}>
+        <Link to="/">
+          <img
+            src={`${getBaseUrl()}img/icons/home.svg`}
+            alt="Home"
+            className={styles.homeIcon}
+          />
+        </Link>
+        <span className={styles.arrow}>›</span>
+        <span className={styles.activeBreadcrumb}>Phones</span>
+      </div>
+
       <h1 className={styles.title}>Mobile phones</h1>
       <p className={styles.count}>{total} models</p>
 
@@ -104,12 +136,12 @@ export const PhonesPage: React.FC = () => {
         ))}
       </div>
 
-      {perPage !== 'all' && (
+      {perPage !== 'all' && total > itemsPerPage && (
         <Pagination
           total={total}
           perPage={itemsPerPage}
           currentPage={currentPage}
-          onPageChange={setCurrentPage}
+          onPageChange={handlePageChange}
         />
       )}
     </div>

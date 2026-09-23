@@ -6,11 +6,7 @@
   justify-content: center;
   gap: 8px;
   margin-top: 40px;
-  margin-bottom: 0; /* Обнуляем, чтобы отступ до футера регулировался через margin-top у Footer */
-
-  @include tablet-up {
-    margin-top: 40px;
-  }
+  margin-bottom: 0;
 }
 
 .item {
@@ -27,25 +23,23 @@
   background-color: #fff;
   border: 1px solid #b4bdc3;
   border-radius: 0;
-  transition: all 0.2s ease;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 
-  svg path {
-    stroke: #313237;
-    transition: stroke 0.2s ease;
+  // Если в SVG стоит stroke="currentColor", цвет стрелки наследуется от color кнопки
+
+  @media (hover: hover) {
+    &:hover:not(:disabled) {
+      border-color: #313237;
+    }
   }
 
   &:disabled {
     color: #b4bdc3;
-    cursor: not-allowed;
     border-color: #e2e6e9;
-
-    svg path {
-      stroke: #b4bdc3;
-    }
-  }
-
-  &:hover:not(:disabled) {
-    border-color: #313237;
+    cursor: not-allowed;
   }
 
   &.active {
@@ -56,6 +50,6 @@
 }
 
 .arrow {
-   /* stylelint-disable-next-line property-no-unknown */
+  /* stylelint-disable-next-line property-no-unknown */
   composes: item;
 }

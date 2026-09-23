@@ -2,17 +2,44 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 24px 16px 0; // Добавлен верхний отступ 24px (gap под хедером)
   box-sizing: border-box;
   overflow-x: hidden;
 
   @media (min-width: 640px) {
-    padding: 0 24px;
+    padding: 24px 24px 0;
   }
 
   @media (min-width: 1200px) {
-    padding: 0 32px;
+    padding: 24px 32px 0;
   }
+}
+
+// СТИЛИ ДЛЯ ХЛЕБНЫХ КРОШЕК (Breadcrumbs)
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px; // Отступ снизу до заголовка
+}
+
+.homeIcon {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.arrow {
+  color: #89939a;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.activeBreadcrumb {
+  font-size: 12px;
+  font-weight: 600;
+  color: #89939a;
+  line-height: 15px;
 }
 
 .title {
@@ -32,13 +59,8 @@
 
 .productsGrid {
   display: grid;
-
-  // Было justify-items: center + justify-content: center — из-за этого
-  // сетка центрировалась относительно всей ширины окна, а не выравнивалась
-  // по левому краю вместе с заголовком и фильтрами, как в макете.
   justify-items: start;
   justify-content: start;
-
   grid-template-columns: repeat(1, minmax(0, 288px));
   gap: 16px;
   margin-bottom: 40px;
@@ -111,8 +133,8 @@
   padding: 0 12px;
   box-sizing: border-box;
   background-color: #fff;
-  border: 1px solid #b4bdc3; // Светлая рамка по макету
-  border-radius: 0; // Прямые углы
+  border: 1px solid #b4bdc3;
+  border-radius: 0;
   font-family: inherit;
   font-size: 14px;
   font-weight: 700;

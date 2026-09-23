@@ -16,7 +16,6 @@ interface ProductDetails extends Product {
   cell?: string[];
 }
 
-// Карта цветов для стилизации CSS bg-color
 const COLOR_MAP: Record<string, string> = {
   black: '#1f2022',
   green: '#aee1cd',
@@ -32,7 +31,6 @@ const COLOR_MAP: Record<string, string> = {
   coral: '#ff6f61',
 };
 
-// Функция очищает название товара от указания конкретной памяти и цвета для заголовка h1
 const getCleanTitle = (name: string, capacity?: string, color?: string) => {
   let cleanName = name;
 
@@ -66,10 +64,17 @@ export const ProductDetailsPage: React.FC = () => {
   const { isFavorite, addToFavorites, removeFromFavorites } = useFavorites();
   const { isInCart, addToCart, removeFromCart } = useCart();
 
+  // Плавная прокрутка наверх при смене товара (для 'You may also like')
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  }, [productId]);
+
   useEffect(() => {
     setIsLoading(true);
 
-    // 1. Загрузка данных текущего товара
     const fetchCurrentProduct = fetch(`${getBaseUrl()}api/${category}.json`)
       .then(res => res.json())
       .then((data: ProductDetails[]) => {
@@ -85,7 +90,6 @@ export const ProductDetailsPage: React.FC = () => {
         }
       });
 
-    // 2. Загрузка товаров для карусели «You may also like» со всех категорий
     const fetchSuggested = Promise.all([
       fetch(`${getBaseUrl()}api/phones.json`)
         .then(r => r.json())
@@ -125,8 +129,11 @@ export const ProductDetailsPage: React.FC = () => {
   const currentPrice = product.priceDiscount ?? product.price ?? 0;
   const regularPrice = product.priceRegular ?? product.fullPrice ?? 0;
 
-  const favorite = isFavorite(product.id);
-  const inCart = isInCart(product.id);
+  const currentId = product.itemId || product.id;
+  const normalizedProduct = { ...product, id: currentId };
+
+  const favorite = isFavorite(currentId);
+  const inCart = isInCart(currentId);
   const imagesList = product.images || (product.image ? [product.image] : []);
 
   const availableCapacities =
@@ -134,7 +141,6 @@ export const ProductDetailsPage: React.FC = () => {
   const availableColors =
     product.colorsAvailable || (product.color ? [product.color] : []);
 
-  // Переключение памяти с изменением URL
   const handleCapacityChange = (newCapacity: string) => {
     if (newCapacity === product.capacity) {
       return;
@@ -149,7 +155,6 @@ export const ProductDetailsPage: React.FC = () => {
     }
   };
 
-  // Переключение цвета с изменением URL
   const handleColorChange = (newColor: string) => {
     if (newColor === product.color) {
       return;
@@ -162,6 +167,11 @@ export const ProductDetailsPage: React.FC = () => {
     if (newProductId && newProductId !== productId) {
       navigate(`/${category}/${newProductId}`);
     }
+  };
+
+  // Возврат строго в каталог категории
+  const handleBack = () => {
+    navigate(`/${category}`);
   };
 
   return (
@@ -177,11 +187,7 @@ export const ProductDetailsPage: React.FC = () => {
         <span className={styles.active}>{product.name}</span>
       </div>
 
-      <button
-        type="button"
-        onClick={() => navigate(-1)}
-        className={styles.backBtn}
-      >
+      <button type="button" onClick={handleBack} className={styles.backBtn}>
         ‹ Back
       </button>
 
@@ -269,7 +275,9 @@ export const ProductDetailsPage: React.FC = () => {
               type="button"
               className={`${styles.cartBtn} ${inCart ? styles.inCart : ''}`}
               onClick={() =>
-                inCart ? removeFromCart(product.id) : addToCart(product)
+                inCart
+                  ? removeFromCart(currentId)
+                  : addToCart(normalizedProduct)
               }
             >
               {inCart ? 'Added' : 'Add to cart'}
@@ -277,11 +285,11 @@ export const ProductDetailsPage: React.FC = () => {
 
             <button
               type="button"
-              className={styles.favoriteBtn}
+              className={`${styles.favoriteBtn} ${favorite ? styles.isFavorite : ''}`}
               onClick={() =>
                 favorite
-                  ? removeFromFavorites(product.id)
-                  : addToFavorites(product)
+                  ? removeFromFavorites(currentId)
+                  : addToFavorites(normalizedProduct)
               }
             >
               <img

@@ -48,13 +48,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const { isFavorite, addToFavorites, removeFromFavorites } = useFavorites();
   const { isInCart, addToCart, removeFromCart } = useCart();
 
-  // 1. Единый идентификатор товара (itemId в приоритете, так как он уникален и нужен для URL)
+  // Единый идентификатор товара (itemId в приоритете)
   const productId = product.itemId || product.id;
+  const normalizedProduct = { ...product, id: productId };
 
   const favorite = isFavorite(productId);
   const inCart = isInCart(productId);
 
-  // 2. Безопасное определение цен (price = текущая цена/скидка, fullPrice = полная)
+  // Безопасное определение цен
   const currentPrice = Number(
     product.price ?? product.priceDiscount ?? product.fullPrice ?? 0,
   );
@@ -96,16 +97,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
       <div className={styles.specs}>
         <div className={styles.specRow}>
-          <span>Screen</span>
-          <span>{product.screen || 'N/A'}</span>
+          <span className={styles.specLabel}>Screen</span>
+          <span className={styles.specValue}>{product.screen || 'N/A'}</span>
         </div>
         <div className={styles.specRow}>
-          <span>Capacity</span>
-          <span>{product.capacity || 'N/A'}</span>
+          <span className={styles.specLabel}>Capacity</span>
+          <span className={styles.specValue}>{product.capacity || 'N/A'}</span>
         </div>
         <div className={styles.specRow}>
-          <span>RAM</span>
-          <span>{product.ram || 'N/A'}</span>
+          <span className={styles.specLabel}>RAM</span>
+          <span className={styles.specValue}>{product.ram || 'N/A'}</span>
         </div>
       </div>
 
@@ -114,7 +115,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           type="button"
           className={`${styles.cartBtn} ${inCart ? styles.inCart : ''}`}
           onClick={() =>
-            inCart ? removeFromCart(productId) : addToCart(product)
+            inCart ? removeFromCart(productId) : addToCart(normalizedProduct)
           }
         >
           {inCart ? 'Added' : 'Add to cart'}
@@ -122,9 +123,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         <button
           type="button"
-          className={styles.favoriteBtn}
+          className={`${styles.favoriteBtn} ${favorite ? styles.isFavorite : ''}`}
           onClick={() =>
-            favorite ? removeFromFavorites(productId) : addToFavorites(product)
+            favorite
+              ? removeFromFavorites(productId)
+              : addToFavorites(normalizedProduct)
           }
         >
           <img
